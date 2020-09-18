@@ -1,0 +1,124 @@
+<?php
+	require_once('../../miniframework/App/Utils.php');
+	Utils::verificarLogado();
+?>
+
+<!-- navegacao menu -->
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+	<a class="navbar-brand" href="#">
+		<img src="../public/img/logo/3.png" width="120px" />
+	</a>
+	<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarTogglerDemo02" aria-controls="navbarTogglerDemo02" aria-expanded="false" aria-label="Toggle navigation">
+		<span class="navbar-toggler-icon"></span>
+	</button>
+
+	<div class="collapse navbar-collapse" id="navbarTogglerDemo02">
+		<ul class="navbar-nav mr-auto mt-2 mt-lg-0">
+			<li class="nav-item active">
+				<a class="nav-link" href="#">Home </a>
+			</li>
+			<li class="nav-item">
+				<a class="nav-link disabled" href="#">Mensagens</a>
+			</li>
+			
+			<li class="nav-item">
+				<a class="nav-link disabled" href="#">Configuraçoes de conta</a>
+			</li>
+			<li class="nav-item">
+				<a class="nav-link" href="#">Sair</a>
+			</li>
+		</ul>
+		<form id="pesquisarUsuarios" class="form-inline my-2 my-lg-0" method="post" action="/pesquisarUsuarios">
+			<input class="form-control mr-sm-2" type="search" placeholder="Search" name="pesquisar">
+			<button class="btn btn-outline-info my-2 my-sm-0" type="submit">Search</button>
+		</form>
+	</div>
+</nav>
+
+
+<div class="container mt-5">
+	<div class="row pt-2">
+		
+		<div class="col-md-3">
+
+			<div class="perfil">
+				<div class="perfilTopo">
+
+				</div>
+
+				<div class="perfilPainel">
+					
+					<div class="row mt-2 mb-2">
+						<div class="col mb-2">
+							<span class="perfilPainelNome">Nome do Usuário</span>
+						</div>
+					</div>
+
+					<div class="row mb-2">
+
+						<div class="col">
+							<span class="perfilPainelItem">Tweets</span><br />
+							<span class="perfilPainelItemValor">0</span>
+						</div>
+
+						<div class="col">
+							<span class="perfilPainelItem">Seguindo</span><br />
+							<span class="perfilPainelItemValor">0</span>
+						</div>
+
+						<div class="col">
+							<span class="perfilPainelItem">Seguidores</span><br />
+							<span class="perfilPainelItemValor">0</span>
+						</div>
+
+					</div>
+
+				</div>
+			</div>
+
+		</div>
+
+		<div class="col-md-6">
+			
+			<div class="row mb-2">
+				<div class="col">
+					<div class="card">
+						<div class="card-body">
+							<form id="formPesquisarPor"  method="post" action="/quemseguir">
+								<div class="input-group mb-3">
+									<input id="pesquisarPor" name="pesquisarpor" type="text" class="form-control" placeholder="Quem você está procurando?">
+									<div class="input-group-append">
+										<button id="buttonPesquisarPor" class="btn btn-primary" type="submit">Procurar</button>
+									</div>
+								</div>
+							</form>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			 
+				<div class="row mb-2">
+					<div class="col">
+						<div class="card">
+							<div id="containerPesquisa" class="card-body">
+								 
+								<div class="row">
+                                     <div class="col-md-6">
+										<div class="pt-4 mt-4">
+											<a href="/mostrarMaisUsuarios">Pesquisar mais usúarios</a>
+										</div>
+									 </div>
+								</div>
+
+							</div>
+
+							
+						</div>
+					</div>
+				</div>
+		 
+
+		</div>
+	</div>
+</div>

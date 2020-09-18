@@ -1,0 +1,181 @@
+
+
+
+
+
+.perfil {
+    border: 1px solid #e6ecf0;
+    background: #fff;
+    position: relative;
+    margin-bottom: 10px;
+    display: block;
+    width: 100%;
+}
+
+.perfilTopo {
+    
+}
+
+.perfilPainel {
+    padding-right: 10px;
+    padding-left: 10px;
+}
+
+.perfilPainelNome {
+    font-weight: bold;
+    font-size: 18px;
+    line-height: 25px;
+}
+
+.perfilPainelItem  {
+    color: #657786;
+    font-size: 12px;
+    font-weight: bold;
+    letter-spacing: .02em;
+    line-height: 16px;
+    overflow: hidden;
+    transition: color .15s ease-in-out;
+}
+
+.perfilPainelItemValor {
+    display: block;
+    font-size: 18px;
+    font-weight: bold;
+    padding-top: 3px;
+    transition: color .15s;
+    color: #1DA1F2 !important;
+}
+
+
+
+ /* //pagina perfil */
+ #wallpaper{
+    color: black;
+    height: 360px;
+    background-image: url(../img/wallpapers/wallpaperPadrao/1.png);  
+    
+    
+}
+
+#containerUploadWallpaper,#textoWallpaper{
+   width: 100%;
+   display:block;
+   align-self: end;
+   text-align: end;
+   font-weight: bold;
+}
+#containerUploadWallpaper i{
+    cursor: pointer;
+}
+
+#boxEscolherImagem{
+    background-color:white;
+    border-radius: 50px;
+    box-shadow: 4px 2px 5px black;
+    padding: 6px;
+    cursor: pointer;
+}
+
+
+#bordaPerfil{
+    border-bottom: 1px solid #c5c6c7;
+    width: 40%;
+    height: 1px;
+    margin: 0px auto;
+}
+
+
+
+#visualizarImagem{
+    position:absolute;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0,0,0,0.5);
+    top: 0px;
+    z-index: 60;
+    display: none;
+
+}
+
+#containerEscolhaImagem{
+    position: absolute;
+    width: 62%;
+    height:80%;
+    top: 50%;
+    left: 50%;
+    margin-right: -50%;
+    transform: translate(-50%, -50%);
+    z-index: 50;
+    background-color: white;
+    box-shadow: 3px 2px 6px black;
+    padding: 15px;
+    box-sizing: border-box;
+
+    
+    
+}
+#containerEscolhaImagem figure{
+    display: block;
+    width:250px;
+    height:150px;
+    box-shadow: 1px 0px 2px black;
+}
+#containerEscolhaImagem figure img{
+    display:block;
+    width:250px;
+    height:150px;
+}
+#containerEscolhaImagem figure div.divSelecionada{
+    width:250px;
+    height:150px;
+}
+ 
+ 
+
+ 
+.divSelecionada{
+    display:none;
+}
+
+#adicionarSelecionada{
+    display:none; 
+}
+.wallpaperSelecionado{
+    position:absolute;
+    top:0px;
+    width:100%;
+    height: 100%;
+    background-color: rgba(41, 125, 236, 0.4);
+}
+
+#imgWallpaperPreview{
+    position: absolute;
+    height: auto;
+   
+    top: 50%;
+    left: 50%;
+    margin-right: -50%;
+    transform: translate(-50%, -50%);
+    max-height: 60%;
+    max-width: 60%;
+}
+ 
+/* galeria */
+.gallery {
+    -webkit-column-count: 3;
+    -moz-column-count: 3;
+    column-count: 3;
+    -webkit-column-width: 33%;
+    -moz-column-width: 33%;
+    column-width: 33%; 
+}
+    .gallery .pics {
+    -webkit-transition: all 350ms ease;
+    transition: all 350ms ease;
+ }
+    .gallery .animation {
+    -webkit-transform: scale(1);
+    -ms-transform: scale(1);
+    transform: scale(1);
+ }
+    

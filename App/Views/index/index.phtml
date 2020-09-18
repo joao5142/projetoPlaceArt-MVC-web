@@ -1,0 +1,134 @@
+                                    <!-- parte do login -->
+
+<div class="container-fluid h-100">
+    <div class="row h-100">
+
+        <div class="col-md-6 bannerImage">
+            <div class="row h-100 justify-content-center align-items-center">
+                <div>
+                    <div class="communicationItem">
+                        <i class="fas fa-search fa-2x mr-3"></i>
+                        Siga o que lhe interessa.
+                    </div>
+                    <div class="communicationItem">
+                        <i class="fas fa-user-friends fa-2x mr-3"></i>
+                        Compre diversas Artes.
+                    </div>
+                    <div class="communicationItem">
+                        <i class="far fa-comment fa-2x mr-3"></i>
+                        Converse Com seus Autores Preferidos.
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6 pt-4 pl-5 pr-5 login">
+            <form method="post" action="miniframework/public/autenticar">
+                <div class="row">
+                    <div class="col">
+                        <input type="email" class="form-control" placeholder="E-mail" name="email">
+                    </div>
+                    <div class="col">
+                        <input type="password" class="form-control" placeholder="Senha" name="senha">
+                    </div>
+                    <div class="col-auto">
+                        <button type="submit" class="btn btn-primary mb-2">Entrar</button>
+                    </div>
+
+                </div>
+                <?php if (isset($_GET['login']) && $_GET['login'] == 'error') {  ?>
+                    <div class="row">
+                        <div class="col text-center">
+                            <span class="text text-danger">E-mail ou Senha Invalidos</span>
+                        </div>
+                    </div>
+                <?php } ?>
+
+            </form>
+
+            <div class="row pt-5 pl-5 pr-5">
+                <div class="col pl-5 pr-5">
+                    <div class="d-flex  justify-content-center" width="100%">
+                        <img class="logo" src="../public/img/logo/3.png" width="150px" />
+                    </div>
+                    <h1 class="title">Veja as melhores artes do Brasil e do Mundo.</h1>
+
+                    <h2 class="mt-5 subtitle">Participe hoje do ArtPlace.</h2>
+                    <a onclick="$('.login').hide();$('.register').fadeIn(2000);" class="btn btn-primary btn-block mb-2">Inscrever-se</a>
+                </div>
+            </div>
+
+
+        </div>
+
+   
+
+
+                                    <!-- parte do registro -->
+ 
+  <div class="col-md-6 pt-4 pl-5 pr-5 register" id="inscreverse" >
+      
+      <div class="card" style="width: 36rem;" >
+          <div class="card-body align-self-top" id="caixaRegistro" >
+
+              <div class="d-flex justify-content-center">
+                  <img src="../public/img/logo/3.png" width="150px" />
+              </div>
+
+              <div class="row">
+                  <div class="col">
+                      <h2>Crie sua conta</h2>
+                  </div>
+              </div>
+
+              <div class="row">
+                  <div class="col">
+
+                      <form id="formRegistro" action="/registrar" method="post">
+                          <div class="form-group">
+                              <input type="text" value="<?= $this->view->usuario['nome'] ?>" class="form-control" placeholder="Nome" name="nome">
+                          </div>
+
+                          <div class="form-group">
+                              <input type="text" value="<?= $this->view->usuario['username'] ?>" class="form-control" placeholder="Username" name="username">
+                          </div>
+
+
+                          <div class="form-group">
+                              <input type="email" value="<?= $this->view->usuario['email'] ?>" class="form-control" placeholder="E-mail" name="email">
+                          </div>
+
+                          <div class="form-group">
+                              <input type="password" value="<?= $this->view->usuario['senha'] ?>" class="form-control" placeholder="Senha" name="senha">
+                          </div>
+                          <div class="form-group">
+                              <input type="password" value="<?= $this->view->usuario['senha'] ?>" class="form-control" placeholder="RepetirSenha" name="rpSenha">
+                          </div>
+
+
+                          <div class="mt-4 mb-4">
+                              <small class="form-text">
+                                  Ao inscrever-se, você concorda com os Termos de Serviço e com as Políticas de Privacidade, incluindo o Uso de Cookies. Outras pessoas poderão encontrar você pelo e-mail ou número de telefone fornecido · Opções de Privacidade
+                              </small>
+                          </div>
+                          <button type="submit" class="btn btn-primary btn-block">Criar</button>
+
+                          <?php if ($this->view->errorCadastro) { ?>
+                              <small class="form-text text-danger">Error ao tentar realizar o cadastro,Verifique se os campos foram preenchidos corretamente.</small>
+                          <?php  } ?>
+                      </form>
+
+                  </div>
+              </div>
+
+          </div>
+      </div>
+  
+</div>
+
+ 
+
+
+    </div>
+
+</div>

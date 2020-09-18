@@ -1,0 +1,54 @@
+
+.quemSeguir {
+    border: 1px solid #e6ecf0;
+    background: #fff;
+    position: relative;
+    margin-bottom: 10px;
+    display: block;
+    width: 100%;
+    padding-right: 10px;
+    padding-left: 10px;
+    padding-bottom: 10px;
+    border-left: none;
+    border-right: none;
+}
+
+.quemSeguirTitulo {
+    font-weight: bold;
+    font-size: 18px;
+    line-height: 25px;
+}
+
+.quemSeguirTxt, .quemSeguirTxt:hover {
+    color: #1DA1F2;
+    text-decoration: none;
+    font-size: 12px;
+    line-height: 16px;
+}
+
+
+.searchContainer img,div#postagemContainer div.col img.imgPostagem{
+    display:inline-block;
+    vertical-align: top;
+    width: 48px;
+    height: 48px;
+    border-radius: 48px;
+    object-fit: cover;
+    object-position: center;
+    cursor: pointer;
+}
+
+div.searchContainerMenu{
+    margin-bottom:25px;
+    padding-top: 10px;
+
+}
+
+.searchContainer  p,.postagem p.nomeUsuarioPostagem{
+    display:inline-block;
+    vertical-align: top;
+    font-size: 12pt;
+    padding-left: 20px;
+    padding-top: 12px;
+   
+}

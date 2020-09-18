@@ -1,0 +1,316 @@
+<?php
+use MF\Controller\Action;
+use MF\Model\Container;
+
+//   echo '<br/>';
+//   print_r($_SESSION);
+//   echo '<br/>';
+//   print_r($this->view);
+
+//   echo $this->view->user_picture;
+require_once('../../miniframework/App/Utils.php');
+Utils::verificarLogado();
+$usuarioCurtiu=$_SESSION['id'];
+$verificaCurtida=Container::getModel('curtida');
+?>
+
+<!-- navegacao menu -->
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+	<a class="navbar-brand" href="#">
+		ArtP 
+	</a>
+	<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarTogglerDemo02" aria-controls="navbarTogglerDemo02" aria-expanded="false" aria-label="Toggle navigation">
+		<span class="navbar-toggler-icon"></span>
+	</button>
+
+	<div class="collapse navbar-collapse" id="navbarTogglerDemo02">
+		<ul class="navbar-nav mr-auto mt-2 mt-lg-0">
+			<li class="nav-item ">
+				<a class="nav-link" href="#">Home </a>
+			</li>
+			<li class="nav-item">
+				<a class="nav-link disabled" href="/miniframework/public/perfil">Perfil</a>
+			</li>
+
+			<li class="nav-item">
+				<a class="nav-link disabled" href="#">Configuraçoes de conta</a>
+			</li>
+			<li class="nav-item">
+				<a class="nav-link" href="/miniframework/public/logOut">Sair</a>
+			</li>
+		</ul>
+		<form id="pesquisarUsuarios" class="form-inline my-2 my-lg-0" method="post" action="/pesquisarUsuarios">
+			<input id="pesquisarPorTimeline" class="form-control mr-sm-2" type="search" placeholder="Search" name="pesquisarpor">
+			<button class="btn btn-outline-info my-2 my-sm-0" type="submit">Search</button>
+		</form>
+	</div>
+</nav>
+
+
+<!-- timelineConteudo -->
+<div class="container mt-5">
+	<div class="row pt-2">
+		<!-- topo imagem,seguidores,postagens ,seguindo -->
+		<div class="col-md-3" id="menuUsuarioContainer">
+
+			<div id="profile">
+				<div class="perfilTopo">
+					<form method="post" enctype="multipart/form-data" id="uploadPic">
+						<input type="file" name="imgInp" accept="image/x-png,image/jpge,image/jpg" id="imgInp" hidden>
+						<div class="pictureContainer">
+							<img id="userImg" src="../public/img/user/<?php echo $this->view->user_picture ?>" />
+							<label for="imgInp"></label>
+						</div>
+					</form>
+				</div>
+
+				<div class="perfilPainel">
+
+					<div class="row mt-2 mb-2">
+						<div class="col mb-2">
+							<span class="perfilPainelNome"><?= $this->view->user_username?></span>
+						</div>
+					</div>
+
+					<div class="row mb-2">
+
+						<div class="col">
+							<span class="perfilPainelItem">Postagens</span><br />
+							<span class="perfilPainelItemValor"><?=$this->view->totPostagens?></span>
+						</div>
+
+						<div class="col">
+							<span class="perfilPainelItem">Seguindo</span><br />
+							<span class="perfilPainelItemValor"><?=$this->view->totSeguindo?></span>
+						</div>
+
+						<div class="col">
+							<span class="perfilPainelItem">Seguidores</span><br />
+							<span class="perfilPainelItemValor"><?=$this->view->totSeguidores?></span>
+						</div>
+
+					</div>
+
+				</div>
+			</div>
+
+		</div>
+		<!-- fim -->
+
+		<!-- postagens -->
+		<div class="col-md-6">
+			<div class="row mb-2">
+				<!-- //Criação de postagem -->
+				<div class="col tweetBox">
+
+
+					<form id="formularioPostagem" method="post" enctype="multipart/form-data" action="miniframwork/postagem">
+
+						<textarea id="textTweet" name="postagemTextArea" class="form-control" id="exampleFormControlTextarea1" rows="3"></textarea>
+
+						<!-- //container da imagem q vai ser carregada -->
+
+						<div class="row mt-4">
+							<div class="col">
+								<div class="d-flex justify-content-end">
+									<i id="fecharArquivoUpload" class="fas fa-times fa-lg"></i>
+								</div>
+
+								<div id="arquivoUpload" class="d-flex justify-content-center">
+								</div>
+							</div>
+						</div>
+						<!-- //criar postagem e foto -->
+						<div class="d-flex justify-content-between mt-4">
+
+							<div class="" id="containerImgPostagemUpload">
+								<input name="imgPostagem" onchange="carregarArquivos(this)" type="file" accept="image/*,video/*" id="arquivoPostagemUpload" hidden />
+								<label for="arquivoPostagemUpload"><i class="fas fa-images fa-2x"></i></label>
+							</div>
+
+
+							<div class="">
+								<button id="buttonTweet" type="submit" class="btn btn-primary justify-content-end">Criar Postagem</button>
+
+							</div>
+						</div>
+
+					</form>
+
+				</div>
+			</div>
+
+
+
+
+			<div id="postagem">
+				<?php foreach ($this->view->postagens as $key => $postagem) {   ?>
+
+					<div id="postagemContainer" class="row postagem">
+						<div class="col">
+
+							<img  class="imgPostagem" src="../public/img/user/<?=$postagem['picture'] ?>">
+
+							<p class="nomeUsuarioPostagem"><strong><?=$postagem['name'] ?></strong><small> <span class="text text-muted">- <?=$postagem['data'] ?></span></small></p>
+							<p><?=$postagem['textoPostagem'] ?></p>
+
+							<!-- //Postagens VIdeo/Foto -->
+							<div id="containerVideoEImagem" style="position:relative">
+
+
+								<?php if ($postagem['arquivo'] != ''  &&  strpos($postagem['arquivo'],'.mp4')!=0) {  ?>
+
+
+									<video autoplay  id="video<?php echo str_replace('.mp4','',$postagem['arquivo']) ?>" class="img-fluid">
+                                              <source src="../public/img/uploads/<?=$postagem['arquivo'] ?>"   type="video/mp4">
+									</video>
+
+
+									<i id="buttonVideoPlay<?=str_replace('.mp4','',$postagem['arquivo']) ?>" onclick="videoplay('video<?php echo str_replace('.mp4','',$postagem['arquivo']) ?>','buttonVideoPlay<?= str_replace('.mp4','',$postagem['arquivo']) ?>');" class="fas fa-play fa-2x buttonVideoPlay"></i>
+									<i id="buttonVideoRestart<?php echo str_replace('.mp4','',$postagem['arquivo']) ?>" onclick="restart('video<?php echo str_replace('.mp4','',$postagem['arquivo']) ?>')" class="fas fa-undo-alt fa-lg buttonVideoRestart"></i>
+									<i id="buttonVideoVolume<?php echo str_replace('.mp4','',$postagem['arquivo']) ?>" onclick="volume('video<?php echo str_replace('.mp4','',$postagem['arquivo'])?>','buttonVideoVolume<?php echo str_replace('.mp4','',$postagem['arquivo']) ?>')" class="fas fa-volume-up fa-lg buttonVideoVolume"></i>
+
+
+
+
+
+								<?php } else { ?>
+									<?php if($postagem['arquivo'] != ''){?>
+										<img src="../public/img/uploads/<?=$postagem['arquivo'] ?>" style="margin:0px auto" class="img-fluid d-flex justify-content-center">
+									<?php } ?>
+								<?php } ?>
+
+							</div>
+
+							<br />
+
+							<!-- <form class="formRemoverPostagem">
+							<div class="col d-flex justify-content-end">
+								<a href="/remover?id_remover=<?= $postagem['id'] ?>" class="btn btn-danger"><small>Remover</small></a>
+							</div>
+						</form> -->
+
+							<!-- //comentarios likes e compartilhar -->
+							<div class="row">
+								<div class="col">
+									<div id="postagemOutros">
+										<div style="position: relative;">
+											<span  onclick="curtir('curtirPost<?php echo $postagem['postagemId'] ?>','<?php echo $postagem['postagemId']?>','<?=$verificaCurtida->verificaCurtida($postagem['postagemId'],$usuarioCurtiu)?>')">Curtir <i style="<?=($verificaCurtida->verificaCurtida($postagem['postagemId'],$usuarioCurtiu)) ? 'color:red':'color:black'?>" id="curtirPost<?php echo $postagem['postagemId'] ?>"  class="far fa-heart"></i></span>
+											<span id="comentarPost<?php echo $postagem['postagemId']  ?>">Cometarios <i class="far fa-comment-alt"></i></span>
+											<span id="compartilharPost<?php echo $postagem['postagemId'] ?>">Compartilhar <i class="fas fa-share-alt"></i></span>
+
+											<span style="position:absolute;right:0px; cursor:none"><span id="totCurtidas<?= $postagem['postagemId']?>"><?php echo  $verificaCurtida->getTotalCurtida($postagem['postagemId'])?></span> <i  class="far fa-heart"></i></span>
+
+										</div>
+									</div>
+								</div>
+							</div>
+							<hr />
+
+							<div id="containerComentarios">
+								<?php for ($i=0; $i < 3; $i++) {  ?>
+									<div style="position:relative; margin-bottom:15px" >
+										<img  class="imgPostagem" src="../public/img/user/<?=$postagem['picture'] ?>">
+                                        
+										<div class="comentario" >		
+											<div class="textoComentario">
+												<p style="border: 1px solid red;padding:0px;margin:0px" class="nomeUsuarioPostagem"><strong><?=$postagem['name'] ?></strong></p>
+												<p>Comentario Teste</p>
+											</div>
+											
+
+											<div id="curtirResponderComentario">
+												<span onclick="curtirComentario">Curtir <i id="curtirComentario" class="far fa-heart"></i></span>
+												<span id="comentarComentario">Responder <i class="far fa-comment-alt"></i></span>
+ 											</div>
+										</div>
+										
+									</div>
+
+									 <?php } ?>
+									 
+									 <div class="seuComentario" >
+										   <input type="text" placeholder="Escreva um comentário" name="comentarioProprio">
+										   <div style="display: inline; color:#777;position:absolute;right:3px;">
+												<input name="imgPostagem" onchange="carregarArquivos(this)" type="file" accept="image/*,video/*" id="arquivoPostagemUpload" hidden />
+												<label for="arquivoPostagemUpload"><i class="fas fa-images fa-1x"></i></label>
+										   </div>
+									 </div>
+								</div>
+
+						</div>
+
+
+
+
+					</div>
+
+
+
+
+				<?php } ?>
+
+
+			</div>
+
+			<div class="row mt-5">
+				<nav aria-label="...">
+					<ul class="pagination">
+						<li class="page-item">
+							<a class="page-link" href="?pagina=1" tabindex="-1">Primeira</a>
+						</li>
+
+						<?php for ($i = 1; $i <= $this->view->totalPaginas; $i++) { ?>
+
+							<li class="page-item <?= $this->view->paginaAtiva == $i ? 'active' : '' ?>">
+								<a class="page-link" href="?pagina=<?= $i ?>"><?= $i ?></a>
+							</li>
+
+
+						<?php } ?>
+
+
+						<li class="page-item">
+							<a class="page-link" href="?pagina=<?= $this->view->totalPaginas ?>">Ultima></a>
+						</li>
+					</ul>
+				</nav>
+			</div>
+
+
+		</div>
+		<!-- fim postagens -->
+
+		<!-- quem seguir -->
+		<div id="quemSeguir" class="col-md-3 d-none d-md-block" style="position:fixed;right:0px">
+			<div class="quemSeguir">
+				<span class="quemSeguirTitulo">Quem seguir</span><br />
+				<hr />
+				<div class="row">
+					<div class="col">
+						<?php foreach ($this->view->quemSeguir as $key => $user) {  ?>
+							<div class="row serchContainerMenu mb-4">
+								<div class="searchContainer col">
+									<img src="../public/img/user/<?=$user['picture']?>">
+									<p><?=$user['name'] ?></p>
+
+								</div>
+
+
+							</div>
+						<?php } ?>
+					</div>
+
+				</div>
+				<a href="/miniframework/public/quemseguir" class="quemSeguirTxt">Procurar por pessoas conhecidas</a>
+			</div>
+		</div>
+		<!-- fim quem seguir -->
+
+	</div>
+	<div style="display:none" class="row" id="pesquisaLateral">
+		<div class="col" id="containerPesquisaLateral">
+
+		</div>
+	</div>
+</div>
