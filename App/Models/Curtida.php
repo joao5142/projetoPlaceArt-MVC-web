@@ -59,14 +59,15 @@ class Curtida extends Model{
     }
 
     public function getTotalCurtida($idPost){
-        $query="SELECT count(*) as totCurtidas FROM `curtidaspostagem` WHERE id_postagem= ?";
+         $query="SELECT count(*) as totCurtidas FROM `curtidaspostagem` WHERE id_postagem= ?";
         $stmt=$this->db->prepare($query);
         $stmt->bindValue(1,$idPost);
  
         $success=$stmt->execute();
+      
 
         if($success){
-           return $stmt->fetch(PDO::FETCH_ASSOC)['totCurtidas'];
+            return $stmt->fetch(PDO::FETCH_ASSOC)['totCurtidas'];
          }else{
              return 0;
          }
@@ -79,12 +80,14 @@ class Curtida extends Model{
         $query="select * from curtidaspostagem where id_postagem=? and id_usuario_curtiu=? limit 1";
         $stmt=$this->db->prepare($query);
         $stmt->bindValue(1,$idPost);
-        $stmt->bindValue(2,  $idUsuarioCurtiu);
+        $stmt->bindValue(2,$idUsuarioCurtiu);
 
         $success=$stmt->execute();
-        $count=count($stmt->fetchAll(PDO::FETCH_ASSOC));
+        $curtiu=$stmt->fetchAll(PDO::FETCH_ASSOC);
 
-        if($success && $count>=1){
+
+      
+        if(count($curtiu)>0){
            return true;
          }else{
            return false;

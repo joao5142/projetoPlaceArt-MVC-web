@@ -58,8 +58,8 @@ use PDO;
     public function getById(){
 
     }
-    public function getAll(){
-        $query="select p.id as postagemId,u.name,u.picture,p.textoPostagem,p.data,p.arquivo,(SELECT count(*) FROM `curtidaspostagem` WHERE id_postagem=p.id) as curtidas from postagens as p left join usuario as u on u.id=p.id_usuario order by p.data desc";
+    public function getAll($offset){
+        $query="select p.id as postagemId,u.name,u.picture,p.textoPostagem,p.data,p.arquivo,(SELECT count(*) FROM `curtidaspostagem` WHERE id_postagem=p.id) as curtidas from postagens as p left join usuario as u on u.id=p.id_usuario order by p.data desc limit 10 offset $offset";
         $stmt= $this->db->prepare($query);
 
         $stmt->execute();

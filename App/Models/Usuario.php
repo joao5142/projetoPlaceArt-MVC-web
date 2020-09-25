@@ -83,6 +83,15 @@ class Usuario extends Model
      public function deletar()
      {
      }
+     public function getUsernamePicture(){
+          $query="select name,picture from usuario where (id=?) limit 1";
+          $stmt=$this->db->prepare($query);
+          $stmt->bindValue(1,$this->__get('id')); 
+          $success=$stmt->execute();
+
+          $user= $stmt->fetch(\PDO::FETCH_ASSOC);
+          return $user;
+     }
 
      public function getById()
      {

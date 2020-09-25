@@ -82,6 +82,56 @@ class Route extends Bootstrap {
 			'controller' => 'AppController',
 			'action' => 'atualizarWallpaperPerfil'
 		);
+		$routes['salvarcomentario'] = array(
+			'route' => '/salvarcomentario',
+			'controller' => 'AppController',
+			'action' => 'salvarcomentario'
+		);
+
+		$routes['timing'] = array(
+			'route' => '/timing',
+			'controller' => 'AppController',
+			'action' => 'timing'
+		);
+		$routes['verificacurtida'] = array(
+			'route' => '/verificacurtida',
+			'controller' => 'AppController',
+			'action' => 'verificacurtida'
+		);
+		$routes['getComentarios'] = array(
+			'route' => '/getComentarios',
+			'controller' => 'AppController',
+			'action' => 'getComentarios'
+		);
+		$routes['getDataString'] = array(
+			'route' => '/getDataString',
+			'controller' => 'AppController',
+			'action' => 'getDataString'
+		); 
+		$routes['timeline2'] = array(
+			'route' => '/timeline2',
+			'controller' => 'AppController',
+			'action' => 'timeline2'
+		); 
+
+		$routes['getTotCurtidas'] = array(
+			'route' => '/getTotCurtidas',
+			'controller' => 'AppController',
+			'action' => 'getTotCurtidas'
+		); 
+
+		$routes['getSeuComentario'] = array(
+			'route' => '/getSeuComentario',
+			'controller' => 'AppController',
+			'action' => 'getSeuComentario'
+		); 
+		$routes['getComentarComentarios'] = array(
+			'route' => '/getComentarComentarios',
+			'controller' => 'AppController',
+			'action' => 'getComentarComentarios'
+		); 
+
+		
 
 		$this->setRoutes($routes);
 	}
