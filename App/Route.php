@@ -130,6 +130,16 @@ class Route extends Bootstrap {
 			'controller' => 'AppController',
 			'action' => 'getComentarComentarios'
 		); 
+		$routes['getSeuComentarComentario'] = array(
+			'route' => '/getSeuComentarComentario',
+			'controller' => 'AppController',
+			'action' => 'getSeuComentarComentario'
+		); 
+		$routes['salvarcomentarComentario'] = array(
+			'route' => '/salvarcomentarComentario',
+			'controller' => 'AppController',
+			'action' => 'salvarcomentarComentario'
+		); 
 
 		
 

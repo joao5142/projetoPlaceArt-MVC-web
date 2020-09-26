@@ -264,6 +264,13 @@ class AppController extends Action
     }
     
 
+    function getSeuComentarComentario(){
+        $comentario=Container::getModel('ComentarComentarios');
+        $resultado= $comentario->getSeuComentario($_POST['idComentario']);
+
+        print_r(json_encode($resultado));
+    }
+    
     function getComentarComentarios(){
         $comentario=Container::getModel('ComentarComentarios');
         $resultado= $comentario-> getAllOffset($_POST['idComentario'],$_POST['totComentarios']);
@@ -307,6 +314,41 @@ class AppController extends Action
         print_r(json_encode($user));
     }
 
+    function salvarcomentarComentario(){
+        if ($_POST['textSeuComentarComentario'] != '') {
+            session_start();
+
+            $comentario = Container::getModel('ComentarComentarios');
+            $comentario->__set('id_usuario_comentou', $_SESSION['id']);
+            $comentario->__set('id_comentario', $_POST['idComentarComentario']);
+            $comentario->__set('textoComentario', $_POST['textSeuComentarComentario']);
+
+            if (isset($_FILES) && $_FILES['arquivoComentarioUpload']['error'] == 0) {
+                $arquivoname = $_SESSION['username'] . "_" . rand(999, 999999) . $_FILES['arquivoComentarioUpload']['name'];
+                //onde a imagem ta guardada temporariamente
+                $arquivotmp = $_FILES['arquivoComentarioUpload']['tmp_name'];
+                //o caminho para a imagem
+                $arquivoPath = "../public/img/uploads/comentarios/";
+
+                //verifica se o upload foi feito 
+                if (is_uploaded_file($arquivotmp)) {
+                    //move a imagem para o imagePath e verifica se foi movida
+                    if (move_uploaded_file($arquivotmp, $arquivoPath . $arquivoname)) {
+                        $comentario->__set('arquivoComentario', $arquivoname);
+                    }
+                }
+            }
+
+
+            $comentario->inserir();
+        }
+
+
+        $usuario=Container::getModel('usuario');
+        $usuario->__set('id',$_SESSION['id']);
+        $user= $usuario->getUsernamePicture();
+        print_r(json_encode($user));
+    }
 
    
 }

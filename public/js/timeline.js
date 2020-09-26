@@ -98,9 +98,78 @@
 
        });
 
+      //quando  pressionar enter no comentar comentario
+       $(document).on('keyup','.textSeuComentarComentario',(e)=>{
+        // console.log($(e.target).parent()[0]);
+        console.log('entrou em textSeuComentarComentario '+e.keyCode);
+        
+          if(e.keyCode=='13'){
+              var valor=$(e.target).val();
+              console.log('texto : '+valor);
+              var formdata=new FormData($(e.target).closest('form')[0]);
 
+              
+              
+              $.ajax({
+                  url:'/miniframework/public/salvarcomentarComentario',
+                  type:'post',
+                  data:formdata,
+                  cache: false,
+                  contentType: false,
+                  processData: false,
+                  dataType:'json',
+                  success:data=>{
+                      console.log(data);
+                    
+                      var containerComentario= $(e.target).closest('#containerComentarComentarios');
+
+                      //limpa o preview
+                      $(e.target).closest('form').find('div.containerArquivoSeuComentario').html('');
+                      $(e.target).closest('form').find('.containerArquivoSeuComentario').css({
+                          'display':'none'
+                      });
+
+
+                       
+
+                        //limpa o input
+                        $(e.target).val('');
+
+                        
+                        var position= $(e.target).closest('#containerComentarComentarios').offset().top- 100;
+                        $('html,body').animate({
+                              scrollTop:position
+                          }, 2000);
+
+                          
+
+                       
+
+
+
+                  },
+                  error:error=>{
+                        console.log(error);
+
+                  },
+                  complete:function(){
+                      
+                    seuComentarComentarioAjax(e.target);
+                 
+                  }
+
+              });
+
+
+              
+
+             
+                
+         }
+   });
 
        //comentarios com o usuario pressionar enter
+
        $(document).on('keyup','.textSeuComentario',(e)=>{
             // console.log($(e.target).parent()[0]);
             console.log('entrou em testeSeuComentario: '+e.keyCode);
@@ -225,9 +294,10 @@
 				}
 			});
    });
+   //fim do document.ready
 
    function carregarPostagemAjax(postagens){
-       console.log('chegamos em carregar os elementos');
+       console.log('chegamos carregarPostagemAjax');
     postagens.forEach(function(postagem, chave){
       
         var totComentarios='';
@@ -393,37 +463,76 @@ console.log('totComentarios: '+totComentarios+" totcurtidas: "+totCurtidaPostage
   
    }
 
-   function carregarComentarComentarioAjax(e){
-       var arrayComentarios=[];
-        var containerComentarios=$(e).parent().closest('#containerComentarComentarios');
+   function escondercomentariocomentarAjax(e){
+       console.log('chegamos em esconder Comentarios');
+   }
 
-        var totComentarios=containerComentarios.find('.comentarComentario').length;
-        
-        var idComentario=containerComentarios.find('.comentarComentarioIdComentario').val();
+   //faz a requisição ajax e passa pra função responsavel por redenrizar na tela
+   function comentariocomentarAjax(e){
 
-                    
-        console.log('existe '+totComentarios+'com a classe comentarComentario,o id da postagem é : '+idComentario);
+    var containerComentarios=$(e).parent().closest('#containerComentarComentarios');
 
-        $.ajax({
+
+    var totComentarios=containerComentarios.find('.comentarComentario').length;
+    var idComentario=containerComentarios.find('.comentarComentarioIdComentario').val();
+
+    console.log('existe '+totComentarios+'com a classe comentarComentario,o id do comentario é : '+idComentario);
+
+    $.ajax({
         url:'/miniframework/public/getComentarComentarios',
         type:'post',
         data:"idComentario="+idComentario+"&totComentarios="+totComentarios,
         dataType:'json',
         async:false,
         success:data=>{
+            console.log(data);
+
+            if(data.length==0){
+                console.log("Vamos esconder os comentarios");
+                $(e).parent().html('<a onclick="escondercomentariocomentarAjax(this)" style="cursor:pointer;color: #1da1f2;text-decoration: underline;" class="verMaisComentarios">Esconder Comentarios</a> ');
+            }else{
+                console.log("Vamos mostrar");
+
+            }
              
-            arrayComentarios=data;
+            carregarComentarComentarioAjax(e,data);
             
         },
         error:error=>{
             console.log(error);
 
         }
-    }).done(data=>{
-        arrayComentarios=data;
- 
+    }) 
+   }
+
+   //faz uma requisição ajax e pega o ultimo comentario inserido
+   function seuComentarComentarioAjax(e){
+        var idComentario=$(e).closest('#containerComentarComentarios').find('.comentarComentarioIdComentario').val();
+        console.log('idComentario='+idComentario);
+        console.log('entramos em seuCOmentarComentarioAjax');
+                    
+        $.ajax({
+        url:'/miniframework/public/getSeuComentarComentario',
+        type:'post',
+        data:"idComentario="+idComentario,
+        dataType:'json',
+        success:data=>{
+            console.log(data);
+            carregarComentarComentarioAjax(e,data);
+            
+        },
+        error:error=>{
+            console.log(error);
+
+        }
     });
+}
+  //funçaõ q renderiza os comentarios
+   function carregarComentarComentarioAjax(e,arrayComentarios){
+         var containerComentarios=$(e).parent().closest('#containerComentarComentarios');
+
     
+      
 
       arrayComentarios.forEach(function(comentario, chave){
         console.log(comentario);

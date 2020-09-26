@@ -6,7 +6,7 @@ use PDO;
   class ComentarComentarios extends Model{
       private $id;
       private $id_usuario_comentou;
-      private $id_comentariok;
+      private $id_comentario;
       private $textoComentario;
       private $arquivoComentario='';
 
@@ -22,8 +22,10 @@ use PDO;
     }
 
     public function inserir()
+
     {
-         $query="insert into comentarios (id_usuario_comentou,id_comentario,textoComentario,arquivoComentario,horaComentario) values (?,?,?,?,now())";
+        echo('chegamos em inserir');
+        $query="insert into comentarcomentarios (id_usuario_comentou,id_comentario,textoComentario,arquivoComentario,horaComentario) values (?,?,?,?,now())";
         $stmt=$this->db->prepare($query);
         $stmt->bindValue(1,$this->__get('id_usuario_comentou'));
         $stmt->bindValue(2,$this->__get('id_comentario'));
@@ -83,7 +85,7 @@ use PDO;
 
     }
     public function getSeuComentario($idComentario){
-        date_default_timezone_set('America/Sao_Paulo');
+         date_default_timezone_set('America/Sao_Paulo');
 
         $query="select comentarcomentarios.id,u.name as nomeUsuario,u.picture as pictureUsuario,textoComentario,arquivoComentario,horaComentario from comentarcomentarios left join usuario as u on u.id=id_usuario_comentou
         where id_comentario = ?  order by horaComentario desc limit 1";
@@ -100,7 +102,7 @@ use PDO;
 
 
     }
-
+    
 
     public function getAllOffset($idComentario,$offset){
         date_default_timezone_set('America/Sao_Paulo');
