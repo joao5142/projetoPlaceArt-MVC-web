@@ -1,8 +1,23 @@
    $(document).ready(() => {
-       $.f
-                
-   
+        //funcao para subir a rolagem
+        $('.denunciarPostagem').hover( function(){$(this).parent().find('p').css({opacity:'1'})}, function(){$(this).parent().find('p').css({opacity:'0'})} );
 
+        $("#back-to-top").css("display", "none");
+
+        $(window).scroll(function() {
+            if($(this).scrollTop() == 0){
+                 $("#back-to-top").css("display", "none");
+            } else {
+                 $("#back-to-top").css("display", "block");
+            }
+        });
+
+        $("#back-to-top").click(function() {
+            $("html, body").animate({scrollTop: 0}, 800);
+        });
+                        
+   
+      //quando digitar enter 
         $(window).keydown(function(event){
             if(event.keyCode == 13) {
             event.preventDefault();
@@ -242,19 +257,27 @@
        let offset = 10;
        $(window).scroll(function() {
         if ($(window).scrollTop() == $(document).height() - $(window).height()) {
+                    //ver qual butão esta clicado 
+                    var route='';
+                    if($("#botaoVendas").hasClass('botaoAtivo')){
+                         route='getVendasPostagem';
+                    }else{
+                        route='timeline2'
+                    }
 					// ajax call get data from server and append to the div
 					$.ajax({
 						type: "post",
-						url: "/miniframework/public/timeline2",
+						url: "/miniframework/public/"+route,
 						data:'offset='+offset,
                         dataType:'json',
                         async:false,
 						 
 						success: data=> {
                         
-                            console.log('chegamos em carregar postagem ajax');
-							console.log(data);
-						    offset+=10;
+                            console.log('chegamos em carregar postagem ajax scroll no final');
+                            console.log(data);
+                           
+						    offset+=data.length;
                          
                     
                             setTimeout(function(){carregarPostagemAjax(data)},1000);
@@ -295,13 +318,127 @@
 			});
    });
    //fim do document.ready
+   function socialPostagens(){
+        $.ajax({
+            type:'post',  
+            url:'/miniframework/public/timeline2',
+            data:'offset='+0,
+            dataType:'json',
+            success:data=>{
+                console.log(data);
+                $('.postagemContainer').remove();
+                carregarPostagemAjax(data);
+
+            },
+            error:error=>{
+
+            },
+            
+        }); 
+        console.log($("#botaoSocial"));
+
+        $("#botaoSocial").addClass('botaoAtivo');
+        $("#botaoVendas").removeClass('botaoAtivo');
+   }
+   function vendasPostagens(){
+       $.ajax({
+        type:'post',  
+        url:'/miniframework/public/getVendasPostagem',
+        data:'offset='+0,
+        dataType:'json',
+        success:data=>{
+             console.log(data);
+             $('.postagemContainer').remove();
+             carregarPostagemAjax(data);
+
+        },
+        error:error=>{
+
+        },
+          
+       });
+
+       $("#botaoVendas").addClass('botaoAtivo');
+        $("#botaoSocial").removeClass('botaoAtivo');
+ 
+
+
+
+   }
+   function excluirPost(id){
+       console.log('o id é '+id);
+       const swalWithBootstrapButtons = Swal.mixin({
+        customClass: {
+        cancelButton: 'btn btn-danger ml-4',
+          confirmButton: 'btn btn-success mr-4'
+          
+        },
+        buttonsStyling: false
+      })
+      
+      swalWithBootstrapButtons.fire({
+        title: 'Tem certeza?',
+        text: "Se deletar nao será possivel recuperar posteriormente",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonText: 'Sim! ',
+        cancelButtonText: 'Cancelar! ',
+        reverseButtons: true
+      }).then((result) => {
+        if (result.isConfirmed) {
+          
+            $.ajax({
+                type:'post',  
+                url:'/miniframework/public/deletarpostagem',
+                data:'idPostagem='+id,
+                dataType:'json',
+                success:data=>{
+                     console.log(data);
+
+                     swalWithBootstrapButtons.fire(
+                        'Deletado!',
+                        'Sua Postagem foi Deletada',
+                        'success'
+                      )
+                      location.href='/miniframework/public/timeline';
+                   
+                },
+                error:error=>{
+                    swalWithBootstrapButtons.fire(
+                        'Cancelado',
+                        'Error ao deletar Postagem ): Tente Novamente'+error,
+                        'error'
+                      )
+                },
+                  
+               });
+
+          
+        } else if (
+          /* Read more about handling dismissals below */
+          result.dismiss === Swal.DismissReason.cancel
+        ) 
+        {
+          swalWithBootstrapButtons.fire(
+            'Cancelado',
+            'Sua postagem nao foi deletada :)',
+            'error'
+          )
+        }
+      })
+
+
+
+   }
+
+
 
    function carregarPostagemAjax(postagens){
        console.log('chegamos carregarPostagemAjax');
     postagens.forEach(function(postagem, chave){
       
-        var totComentarios='';
-        var totCurtidaPostagem='';
+        var totComentarios=0;
+        var totCurtidaPostagem=0;
         var usuarioCurtiu=false;
 
         $.ajax({
@@ -309,9 +446,10 @@
             url:'/miniframework/public/getTotComentarios',
             type:'post',
             data:"idPostagem="+postagem.postagemId,
+            dataType:'json',
             async:false,
-        
             success:data=>{
+                
               totComentarios=data;
 
                 
@@ -329,6 +467,8 @@
         type:'post',
         data:"idPostagem="+postagem.postagemId,
         async:false,
+        dataType:'json',
+
     
         success:data=>{
             totCurtidaPostagem=data;
@@ -349,6 +489,8 @@ $.ajax({
     type:'post',
     data:"idPostagem="+postagem.postagemId,
     async:false,
+    dataType:'json',
+
 
     success:data=>{
         usuarioCurtiu=data;    
@@ -360,14 +502,41 @@ $.ajax({
     usuarioCurtiu=data;    
 });
 
-console.log('totComentarios: '+totComentarios+" totcurtidas: "+totCurtidaPostagem+" verifica curtida: "+usuarioCurtiu)
+var uid=0;
+$.ajax({
+    type: 'post',
+    url: '/miniframework/public/getUsuarioId',
+   dataType:'json',
+    async:false,
+    success: data => {
+         console.log(data);
+         
+    },
+    error: error => {
+        console.log(error);
+    }
+
+}).done(data=>{
+   uid=data;
+});
+
+
+console.log('id da postagem : '+postagem.postagemId+', totComentarios: '+totComentarios+" totcurtidas: "+totCurtidaPostagem+" verifica curtida: "+usuarioCurtiu);
+       var verMaisComentario='';
+
+       if(totComentarios>0){
+        verMaisComentario=`
+        <i class="fas fa-long-arrow-alt-right"></i>
+        <a onclick="carregarComentariosAjax(this)" style="cursor:pointer;" >Carregar Comentarios</a>
+        `;
+       }
 
        var adicionais='';
        if(postagem.arquivo!=''){
            if(postagem.arquivo.indexOf('.mp4')!= -1){
                 adicionais=`
                 <video  id="video`+postagem.arquivo.replace('.mp4','')+`" class="img-fluid">
-                            <source src="../public/img/uploads/postagens/`+postagem.postagemId+`"   type="video/mp4">
+                            <source src="../public/img/uploads/postagens/`+postagem.arquivo+`"   type="video/mp4">
                 </video>
 
 
@@ -383,6 +552,13 @@ console.log('totComentarios: '+totComentarios+" totcurtidas: "+totCurtidaPostage
 
        }
 
+       var adicionalDeletar='';
+       if(uid==postagem.usuarioId){
+         adicionalDeletar=`
+         <span onclick="excluirPost(`+postagem.postagemId+`)" style="position:absolute;right:0px; cursor:pointer"><i class="fas fa-trash"></i></span>
+         `;
+       }
+
         var estiloCor= (usuarioCurtiu) ? 'color:red':'color:black';
 
         var postagemElement = `
@@ -390,9 +566,10 @@ console.log('totComentarios: '+totComentarios+" totcurtidas: "+totCurtidaPostage
             <div class="col">
                 
 
-                <img  class="imgPostagem" src="../public/img/user/`+postagem.picture+`"/>
+                 <img style="cursor:pointer" onclick="location.href='/miniframework/public/perfil?idUsuario=`+postagem.usuarioId+`'"  class="imgPostagem" src="../public/img/user/`+postagem.picture+`"/>
 
-                <p style="display:inline;" class="nomeUsuarioPostagem"><strong>`+postagem.name+`</strong><small> <span class="text text-muted">- `+postagem.data+`</span></small></p>
+                <p style="display:inline;" class="nomeUsuarioPostagem"><strong onclick="location.href='/miniframework/public/perfil?idUsuario=`+postagem.usuarioId+`'" style="cursor:pointer">`+postagem.name+`</strong><small> <span class="text text-muted">- `+postagem.data+`</span></small></p>
+`+adicionalDeletar+`
                 <p style="margin-top:14px">`+postagem.textoPostagem+`</p>
 
                 <!-- //Postagens VIdeo/Foto -->
@@ -421,7 +598,7 @@ console.log('totComentarios: '+totComentarios+" totcurtidas: "+totCurtidaPostage
                                 <span onclick="esconderMostrarContainer('comentarPost`+postagem.postagemId+`')" id="comentarPost`+postagem.postagemId+`">Cometarios <span>`+totComentarios+`</span><i class="far fa-comment-alt"></i></span>
                                 <span id="compartilharPost`+postagem.postagemId+`?>">Compartilhar <i class="fas fa-share-alt"></i></span>
 
-                                <span style="position:absolute;right:0px; cursor:none"><span id="totCurtidas`+postagem.postagemId+`"`+totCurtidaPostagem+`</span> <i  class="far fa-heart"></i></span>
+                                <span style="position:absolute;right:0px; cursor:none"><span id="totCurtidas`+postagem.postagemId+`"> `+totCurtidaPostagem+`</span> <i class="far fa-heart"></i></span>
 
                             </div>
                         </div>
@@ -429,25 +606,35 @@ console.log('totComentarios: '+totComentarios+" totcurtidas: "+totCurtidaPostage
                 </div>
                 <hr/>
                 <!-- comentarios da postagem -->
-                <div id="containerComentarios" class="hideComentarios">                  
-                         <div>
-                             <a onclick="carregarComentariosAjax(this)" style="cursor:pointer;color: #1da1f2;text-decoration: underline;" class="verMaisComentarios">Ver mais Comentarios</a>
+                <div class="postagemComentarioId" id="postagemComentariosId`+postagem.postagemId+`">
+                    <div id="containerComentarios" class="hideComentarios">
+                        <input class="comentarioIdPostagem" hidden type="text" value="`+postagem.postagemId+`">
+                        <div id="containerComentariosInner">
+ 
+                        
+                        </div>
+            
+                        <div class="verMaisComentarios">
+                           `+verMaisComentario+`
                          </div>
-                         <div class="seuComentario">
-                               <form action="/salvarcomentario" method="post">
-                                    <div class="containerArquivoSeuComentario">
-
-                                     </div>
-                                    <input onclick=""  id="textSeuComentario`+postagem.postagemId+`" class="textSeuComentario" type="text" placeholder="Escreva um comentário" name="textSeuComentario"/>
-                                    <div style="display: inline; color:#777;position:absolute;right:30px;">
-                                            <input name="idPostagemComentario" type="text" value="`+postagem.postagemId+`" hidden>
-                                            <input onchange="carregarArquivosComentario(this,'`+postagem.postagemId+`')"   name="arquivoComentarioUpload" type="file" accept="image/*,video/*" class="arquivoComentarioUpload" id="arquivoComentarioUpload`+postagem.postagemId+`" hidden />
-                                            <label style="cursor: pointer;" for="arquivoComentarioUpload`+postagem.postagemId+`>"><i class="fas fa-images fa-1x"></i></label>
-                                    </div>
-                               </form>
-
-                         </div>
-                    </div>
+                        
+               
+                        <div class="seuComentario">
+                            <form action="/salvarcomentario" method="post">
+                                <div class="containerArquivoSeuComentario">
+            
+                                </div>
+                                <input id="textSeuComentario`+postagem.postagemId+`" class="textSeuComentario" type="text" placeholder="Escreva um comentário" name="textSeuComentario">
+                                <div style="display: inline; color:#777;position:absolute;right:30px;">
+                                    <input name="idPostagemComentario" type="text" value="`+postagem.postagemId+`" hidden>
+                                    <input onchange="carregarArquivosComentario(this,'`+postagem.postagemId+`')" name="arquivoComentarioUpload" type="file" accept="image/*,video/*" class="arquivoComentarioUpload" id="arquivoComentarioUpload`+postagem.postagemId+`" hidden />
+                                    <label style="cursor: pointer;" for="arquivoComentarioUpload`+postagem.postagemId+`"><i class="fas fa-images fa-1x"></i></label>
+                                </div>
+                            </form>
+            
+                        </div>
+                    </div>             
+               </div> 
 
             </div>
 
@@ -456,6 +643,35 @@ console.log('totComentarios: '+totComentarios+" totcurtidas: "+totCurtidaPostage
 
         </div>`;
         $("#postagem").append(postagemElement);
+       /*
+      
+
+        var containerComentarios=$(e).parent().closest('#containerComentarComentarios');
+
+
+        var totComentarios=containerComentarios.find('.comentarComentario').length;
+        var idComentario=containerComentarios.find('.comentarComentarioIdComentario').val();
+
+            $.ajax({
+
+                url:'/miniframework/public/getComentarios',
+                type:'post',
+                data:"data="+comentario.horaComentario,
+                async:false,
+            
+                success:data=>{
+                    console.log(data);
+                    dataStr=data;
+
+                    
+                },
+                error:error=>{
+                
+                }
+        }).done(data=>{
+            dataStr=data;
+        });
+     */
      });
 
    
@@ -463,9 +679,176 @@ console.log('totComentarios: '+totComentarios+" totcurtidas: "+totCurtidaPostage
   
    }
 
-   function escondercomentariocomentarAjax(e){
-       console.log('chegamos em esconder Comentarios');
+   function comentariosAjax(containerInserir,postagemId){
+         
+         
+          var comentario=`      
+        <div class="comentariosPostagem">
+            <div class="comentariosContainer" style="position:relative; margin-bottom:15px;">
+                <img style="" class="imgPostagem" src="../public/img/user/<?= $comentario['pictureUsuario'] ?>">
+                <p style="display:inline;" class="nomeUsuarioPostagem"><strong><?= $comentario['nomeUsuario'] ?></strong></p>
+
+
+                <!-- //comentario -->
+                <div class="comentario">
+
+                    <p style="margin-top: 4px;" class="textoComentario"><?= $comentario['textoComentario'] ?></p>
+                    <!-- foto ou video do comentario -->
+                    <br />
+                    <div class="containerVideoEImagemComentarios" style="position:relative;">
+
+                        <?php if (isset($comentario['arquivoComentario']) && $comentario['arquivoComentario'] != '') { ?>
+
+                            <?php if (strpos($comentario['arquivoComentario'], '.mp4') != 0) { ?>
+                                <video width="50%" height="50%" id="videoComentario<?php echo str_replace('.mp4', '', $comentario['arquivoComentario']) ?>" style="" class="img-fluid">
+                                    <source src="../public/img/uploads/comentarios/<?= $comentario['arquivoComentario'] ?>" type="video/mp4">
+                                </video>
+
+                                <i id="buttonVideoPlayComentario<?= str_replace('.mp4', '', $comentario['arquivoComentario']) ?>" onclick="videoplay('videoComentario<?php echo str_replace('.mp4', '', $comentario['arquivoComentario']) ?>','buttonVideoPlayComentario<?= str_replace('.mp4', '', $comentario['arquivoComentario']) ?>');" class="fas fa-play fa-sm buttonVideoPlayComentario"></i>
+                                <i id="buttonVideoRestartComentario<?php echo str_replace('.mp4', '', $comentario['arquivoComentario']) ?>" onclick="restart('videoComentario<?php echo str_replace('.mp4', '', $comentario['arquivoComentario']) ?>')" class="fas fa-undo-alt fa-sm buttonVideoRestart"></i>
+                                <i id="buttonVideoVolumeComentario<?php echo str_replace('.mp4', '', $comentario['arquivoComentario']) ?>" onclick="volume('videoComentario<?php echo str_replace('.mp4', '', $comentario['arquivoComentario']) ?>','buttonVideoVolumeComentario<?php echo str_replace('.mp4', '', $comentario['arquivoComentario']) ?>')" class="fas fa-volume-up fa-sm buttonVideoVolume"></i>
+
+
+
+                            <?php } else { ?>
+
+                                <img width="50%" height="50%" src="../public/img/uploads/comentarios/<?= $comentario['arquivoComentario'] ?>" style="margin:0px auto margin-top: 20px;" class="img-fluid">
+
+                            <?php } ?>
+
+
+                        <?php } ?>
+                    </div>
+
+
+                    <div id="curtirResponderComentario">
+                        <span onclick="curtirComentario">Curtir </span>
+                        <span id="comentarComentario">Responder </span>
+                        <span style="font-size: 13px;"><?= $comentarios->timing(strtotime($comentario['horaComentario'])) ?></span>
+
+                    </div>
+
+                    <!-- //comentarios dos comentarios -->
+                    <div id="containerComentarComentarios">
+                        <input class="comentarComentarioIdComentario" value="<?=$comentario['id']?>" hidden/>
+                       <div id="containerComentarComentariosInner" >
+                    <?php foreach ($comentariosDosComentarios->getAll($comentario['id']) as $key => $comentC) { ?>
+                         
+                        <div  class="comentarComentario" style="margin-left: 10%; margin-top:5% ; font-size:14px">
+
+                               <img style="width: 32px; height:32px" class="imgPostagem" src="../public/img/user/<?= $comentC['pictureUsuario'] ?>">
+                                <p style="display:inline-block; font-size:14px" class="nomeUsuarioPostagem"><strong><?= $comentC['nomeUsuario'] ?></strong></p>
+                                
+                            <div class="comentario">
+                                    
+                                    <p style="margin-top: 4px;" class="textoComentarComentario"><?= $comentC['textoComentario'] ?></p>
+                                
+                                    <!-- foto ou video do comentario -->
+                                    <br />
+                                    <div class="containerVideoEImagemComentarios" style="position:relative;">
+
+                                        <?php if (isset($comentC['arquivoComentario']) && $comentC['arquivoComentario'] != '') { ?>
+
+                                            <?php if (strpos($comentC['arquivoComentario'], '.mp4') != 0) { ?>
+                                                <video width="50%" height="50%" id="videoComentarioC<?php echo str_replace('.mp4', '', $comentC['arquivoComentario']) ?>" style="" class="img-fluid">
+                                                    <source src="../public/img/uploads/comentarios/<?= $comentC['arquivoComentario'] ?>" type="video/mp4">
+                                                </video>
+
+                                                <i id="buttonVideoPlayComentario<?= str_replace('.mp4', '', $comentC['arquivoComentario']) ?>" onclick="videoplay('videoComentarioC<?php echo str_replace('.mp4', '', $comentC['arquivoComentario']) ?>','buttonVideoPlayComentario<?= str_replace('.mp4', '', $comentC['arquivoComentario']) ?>');" class="fas fa-play fa-sm buttonVideoPlayComentario"></i>
+                                                <i id="buttonVideoRestartComentario<?php echo str_replace('.mp4', '', $comentC['arquivoComentario']) ?>" onclick="restart('videoComentarioC<?php echo str_replace('.mp4', '', $comentC['arquivoComentario']) ?>')" class="fas fa-undo-alt fa-sm buttonVideoRestart"></i>
+                                                <i id="buttonVideoVolumeComentario<?php echo str_replace('.mp4', '', $comentC['arquivoComentario']) ?>" onclick="volume('videoComentarioC<?php echo str_replace('.mp4', '', $comentC['arquivoComentario']) ?>','buttonVideoVolumeComentario<?php echo str_replace('.mp4', '', $comentC['arquivoComentario']) ?>')" class="fas fa-volume-up fa-sm buttonVideoVolume"></i>
+
+
+
+                                            <?php } else { ?>
+
+                                                <img width="50%" height="50%" src="../public/img/uploads/comentarios/<?= $comentC['arquivoComentario'] ?>" style="margin:0px auto margin-top: 20px;" class="img-fluid">
+
+                                            <?php } ?>
+
+
+                                        <?php } ?>
+                                    </div>
+
+
+                                    <div id="curtirResponderComentario">
+                                        <span onclick="curtirComentarioC()">Curtir </span>
+                                        <span id="comentarComentario">Responder </span>
+                                        <span style="font-size: 13px;"><?= $comentarios->timing(strtotime($comentC['horaComentario'])) ?></span>
+
+                                    </div>
+                                </div>
+                            </div>
+
+                        <?php }?>
+
+                         </div>
+                        
+
+                        <div class="verEsconderComentarios" style="margin-left: 10%; margin-top:5% ; font-size:14px">
+                                 <?php  if($comentariosDosComentarios->getTotComentarios($comentario['id']) >0){   ?>
+                                      <a onclick="comentariocomentarAjax(this)" style="cursor:pointer;color: #1da1f2;text-decoration: underline;" class="verMaisComentarios">Ver mais Comentarios</a>
+                                 <?php }?>
+                            </div>
+
+                        <div style="margin-left: 10%; margin-top:5% ; font-size:14px" class="seuComentario">
+                                <form action="/salvarcomentario" method="post">
+                                    <div class="containerArquivoSeuComentarComentario">
+
+                                    </div>
+                                    <input id="textSeuComentarComentario<?= $comentario['id']?>" class="textSeuComentarComentario" type="text" placeholder="Escreva um comentário" name="textSeuComentarComentario">
+                                    <div style="display: inline; color:#777;position:absolute;right:30px;">
+                                        <input name="idComentarComentario" type="text" value="<?= $comentario['id'] ?>" hidden>
+                                        <input onchange="carregarArquivosComentario(this,'<?= $comentario['id'] ?>')" name="arquivoComentarioUpload" type="file" accept="image/*,video/*" class="arquivoComentarioUpload" id="arquivoComentarioUpload<?= $comentario['id'] ?>" hidden />
+                                        <label style="cursor: pointer;" for="arquivoComentarioUpload<?= $comentario['id'] ?>"><i class="fas fa-images fa-1x"></i></label>
+                                    </div>
+                                </form>
+
+                        </div>
+
+                   </div>
+
+
+                </div>
+
+            </div>
+        </div>
+
+        `  ;
+    
    }
+
+   function escondercomentariocomentarAjax(e){
+       var containerComentario=$(e).parent().closest('#containerComentarComentarios');
+      
+       containerComentario.find(".comentarComentario").remove();
+
+       containerComentario.find('.verEsconderComentarComentarios').html(`<i class="fas fa-long-arrow-alt-right"></i>
+       <a onclick="comentariocomentarAjax(this)" style="cursor:pointer;" class="verMaisComentarios">Ver mais Comentarios</a>`);
+       
+
+       ('html,body').animate({
+          scrollTop: $(containerComentario).offset().top
+         }, 500);
+    }
+
+    function esconderComentariosAjax(e){
+        var containerComentario=$(e).parent().closest('#containerComentarios');
+       
+        containerComentario.find(".comentariosPostagem").remove();
+ 
+        containerComentario.find('.verMaisComentarios').html(`
+        <i class="fas fa-long-arrow-alt-right"></i>
+        <a onclick="carregarComentariosAjax(this)" style="cursor:pointer;" >Carregar Comentarios</a>              
+        `);
+        
+ 
+        ('html,body').animate({
+           scrollTop: $(containerComentario).offset().top
+          }, 500);
+     }
+
+    
 
    //faz a requisição ajax e passa pra função responsavel por redenrizar na tela
    function comentariocomentarAjax(e){
@@ -489,13 +872,19 @@ console.log('totComentarios: '+totComentarios+" totcurtidas: "+totCurtidaPostage
 
             if(data.length==0){
                 console.log("Vamos esconder os comentarios");
-                $(e).parent().html('<a onclick="escondercomentariocomentarAjax(this)" style="cursor:pointer;color: #1da1f2;text-decoration: underline;" class="verMaisComentarios">Esconder Comentarios</a> ');
+                $(e).parent().html(`
+                <i class="fas fa-long-arrow-alt-left"></i>
+                <a onclick="escondercomentariocomentarAjax(this)" style="cursor:pointer" class="esconderComentarComentarios">Esconder Comentarios</a>`);
             }else{
                 console.log("Vamos mostrar");
 
             }
              
             carregarComentarComentarioAjax(e,data);
+
+            ('html,body').animate({
+                scrollTop: $(containerComentario).offset().top
+            }, 500);
             
         },
         error:error=>{
@@ -529,7 +918,7 @@ console.log('totComentarios: '+totComentarios+" totcurtidas: "+totCurtidaPostage
 }
   //funçaõ q renderiza os comentarios
    function carregarComentarComentarioAjax(e,arrayComentarios){
-         var containerComentarios=$(e).parent().closest('#containerComentarComentarios');
+         var containerComentarios=$(e).parent().closest('#containerComentarComentarios').find("#containerComentarComentariosInner");
 
     
       
@@ -582,7 +971,7 @@ console.log('totComentarios: '+totComentarios+" totcurtidas: "+totCurtidaPostage
 
 
        var comentarComentario=`
-                <div  class="comentarComentario" style="margin-left: 10%; margin-top:5% ; font-size:14px">
+            <div  class="comentarComentario" style="margin-left: 10%; margin-top:5% ; font-size:14px">
                 <img style="width: 32px; height:32px" class="imgPostagem" src="../public/img/user/`+comentario.pictureUsuario+`">
                 <p style="display:inline-block; font-size:14px" class="nomeUsuarioPostagem"><strong>`+comentario.nomeUsuario+`</strong></p>
                 
@@ -599,7 +988,7 @@ console.log('totComentarios: '+totComentarios+" totcurtidas: "+totCurtidaPostage
 
                     <div id="curtirResponderComentario">
                         <span onclick="curtirComentarioC()">Curtir </span>
-                        <span id="comentarComentario">Responder </span>
+                        <span id="comentarComentario" onclick="mostrarResponder(`+comentario.idComentario+`)">Responder </span>
                         <span style="font-size: 13px;">`+dataStr+`</span>
 
                     </div>
@@ -608,7 +997,9 @@ console.log('totComentarios: '+totComentarios+" totcurtidas: "+totCurtidaPostage
             </div>`;
 
 
-            containerComentarios.prepend(comentarComentario);
+            containerComentarios.append(comentarComentario);
+
+         
 
         });
    }
@@ -623,7 +1014,7 @@ console.log('totComentarios: '+totComentarios+" totcurtidas: "+totCurtidaPostage
             dataType:'json',
             success:data=>{
                 console.log(data);
-                carregarComentariosPostagemAjax(data,idPostagem,$(e).parent().closest('#containerComentarios'));
+                carregarComentariosPostagemAjax(data,idPostagem,$(e).parent().closest('#containerComentarios').find('#containerComentariosInner'));
 
                 
             },
@@ -644,6 +1035,7 @@ console.log('totComentarios: '+totComentarios+" totcurtidas: "+totCurtidaPostage
                   
     console.log('existe '+totComentarios+'com a classe .comentariosPostagem,o id da postagem é : '+idPostagem);
 
+    var containerC=$(e).parent().closest('#containerComentarios').find("#containerComentariosInner");
     $.ajax({
       url:'/miniframework/public/getComentarios',
       type:'post',
@@ -651,8 +1043,14 @@ console.log('totComentarios: '+totComentarios+" totcurtidas: "+totCurtidaPostage
       dataType:'json',
       success:data=>{
           console.log(data);
-        carregarComentariosPostagemAjax(data,idPostagem,$(e).parent().closest('#containerComentarios'));
-
+        carregarComentariosPostagemAjax(data,idPostagem,containerC);
+        
+        if(data.length==0){
+            console.log("Vamos esconder os comentarios");
+            $(e).parent().html(`
+            <i class="fas fa-long-arrow-alt-left"></i>
+            <a onclick="esconderComentariosAjax(this)" style="cursor:pointer" class="esconderComentarComentarios">Esconder Comentarios</a>`);
+        }
           
       },
       error:error=>{
@@ -669,6 +1067,7 @@ console.log('totComentarios: '+totComentarios+" totcurtidas: "+totCurtidaPostage
    comentariosList.forEach(function(comentario, chave){
        console.log('estamos em carregarCOmentariosPostagemAjax');
         var dataStr= '';
+        var totComentarComentarios=0;
        //transforma a date em anos dias mes
        $.ajax({
 
@@ -689,20 +1088,60 @@ console.log('totComentarios: '+totComentarios+" totcurtidas: "+totCurtidaPostage
         }).done(data=>{
             dataStr=data;
         });
+
+        $.ajax({
+
+            url:'/miniframework/public/getTotComentarComentarios',
+            type:'post',
+            data:"idComentario="+comentario.idComentario,
+            dataType:'json',
+            async:false,
+        
+            success:data=>{
+                console.log('o total de do comentar comentarios é '+data);
+                totComentarComentarios=data;
+
+                
+            },
+            error:error=>{
+            
+            }
+    }).done(data=>{
+        totComentarComentarios=data;
+    });
+
+ var usuarioCurtiu;
+    $.ajax({
+        type:'post',
+        url:'/miniframework/public/verificacurtidacomentario',
+        data:'idComentario='+comentario.idComentario+'&idUsuario='+0,
+        dataType:'json',
+        async:false,
+        success:data=>{
+             console.log(data);
+             usuarioCurtiu=data;
+        },
+
+
      
+    }).done(data=>{
+        usuarioCurtiu=data;
+    });
+
+     var estiloCor=(usuarioCurtiu) ? 'color:#3E8AF4':'color:black';
        console.log("dataStr="+dataStr);
 
        var adicionais='';
        if(comentario.arquivoComentario!=''){
            if(comentario.arquivoComentario.indexOf('.mp4')!= -1){
                 adicionais=`
-                <video  width="50%" height="50%" id="videoComentario<?php echo str_replace('.mp4','',$comentario['arquivoComentario']) ?>" style=""   class="img-fluid">
+                <video  width="50%" height="50%" id="videoComentario`+comentario.arquivoComentario.replace('.mp4','')+`" style=""   class="img-fluid">
                       <source src="../public/img/uploads/comentarios/`+comentario.arquivoComentario+`"   type="video/mp4">
                 </video>
 
-                <i id="buttonVideoPlayComentario<?=str_replace('.mp4','',`+comentario.arquivoComentario+`) ?>" onclick="videoplay('videoComentario<?php echo str_replace('.mp4','',`+comentario.arquivoComentario+`) ?>','buttonVideoPlayComentario<?= str_replace('.mp4','',`+comentario.arquivoComentario+`) ?>');" class="fas fa-play fa-sm buttonVideoPlayComentario"></i>
-                <i id="buttonVideoRestartComentario<?php echo str_replace('.mp4','',`+comentario.arquivoComentario+`) ?>" onclick="restart('videoComentario<?php echo str_replace('.mp4','',`+comentario.arquivoComentario+`) ?>')" class="fas fa-undo-alt fa-sm buttonVideoRestart"></i>
-                <i id="buttonVideoVolumeComentario<?php echo str_replace('.mp4','',`+comentario.arquivoComentario+`) ?>" onclick="volume('videoComentario<?php echo str_replace('.mp4','',`+comentario.arquivoComentario+`)?>','buttonVideoVolumeComentario<?php echo str_replace('.mp4','',`+comentario.arquivoComentario+`) ?>')" class="fas fa-volume-up fa-sm buttonVideoVolume"></i>
+                <i id="buttonVideoPlayComentario`+comentario.arquivoComentario.replace('.mp4','')+`" onclick="videoplay('videoComentario`+comentario.arquivoComentario.replace('.mp4','')+`','buttonVideoPlayComentario`+comentario.arquivoComentario.replace('.mp4','')+`');" class="fas fa-play fa-sm buttonVideoPlayComentario"></i>
+                <i id="buttonVideoRestartComentario`+comentario.arquivoComentario.replace('.mp4','')+`" onclick="restart('videoComentario`+comentario.arquivoComentario.replace('.mp4','')+`')" class="fas fa-undo-alt fa-sm buttonVideoRestart"></i>
+                <i id="buttonVideoVolumeComentario`+comentario.arquivoComentario.replace('.mp4','')+`" onclick="volume('videoComentario`+comentario.arquivoComentario.replace('.mp4','')+`','buttonVideoVolumeComentario`+comentario.arquivoComentario.replace('.mp4','')+`')" class="fas fa-volume-up fa-sm buttonVideoVolume"></i>
                 `;
            }else{
               adicionais=`<img   width="50%" height="50%" src="../public/img/uploads/comentarios/`+comentario.arquivoComentario+`" style="margin:0px auto margin-top: 20px;" class="img-fluid">`;
@@ -710,9 +1149,17 @@ console.log('totComentarios: '+totComentarios+" totcurtidas: "+totCurtidaPostage
            }
 
        }
-     
+
+       var adicionaisComentarComentarios='';
+
+       if(totComentarComentarios>0){
+        adicionaisComentarComentarios=`
+            <i class="fas fa-long-arrow-alt-right"></i>
+            <a onclick="comentariocomentarAjax(this)" style="cursor:pointer" class="verMaisComentarios">Ver mais Comentarios</a>
+            `;
+       }
+      var usuarioCurtiuComentario=0;
        var comentarioElement=` 
-       <input class="comentarioIdPostagem" hidden type="text" value="`+idPostagem+`">
 
           <div class="comentariosPostagem">
            <div class="comentariosContainer" style="position:relative; margin-bottom:15px;" >
@@ -731,12 +1178,48 @@ console.log('totComentarios: '+totComentarios+" totcurtidas: "+totCurtidaPostage
                     </div>
                      
 
-                   <div id="curtirResponderComentario">
-                       <span onclick="curtirComentario">Curtir </span>
-                       <span id="comentarComentario">Responder </span>
+                   <div id="curtirResponderComentario" style="position:relative">
+                       <span style="`+estiloCor+`" onclick="curtirComentario('curtirComentario`+comentario.idComentario+`','`+comentario.idComentario+`','`+usuarioCurtiuComentario+`')"   id="curtirComentario`+comentario.idComentario+`">Curtir </span>
+                       <span id="comentarComentario" onclick="mostrarResponder(`+comentario.idComentario+`)">Responder </span>
                        <span style="font-size: 13px;" id="comentarComentario">`+dataStr+`</span>
+
+                       <span style="position:absolute; top:0px ;right:0px" class=""><span>`+totComentarComentarios+` </span><i class="far fa-comment-alt"></i></span>
+
                        
                     </div>
+
+                    <!-- //comentarios dos comentarios -->
+                    <div id="containerComentarComentarios">
+                        <input class="comentarComentarioIdComentario" value="`+comentario.idComentario+`" hidden/>
+                       <div id="containerComentarComentariosInner" >
+                    
+
+                         </div>
+                        
+
+                         <div class="verEsconderComentarComentarios" style="margin-left: 10%; margin-top:5% ; font-size:14px">
+                            `+ adicionaisComentarComentarios+`
+                        </div>
+                           
+                
+
+                        <div id="containerSeuComentario`+comentario.idComentario+`" style="display:none;margin-left: 10%; margin-top:5% ; font-size:14px" class="seuComentario">
+                                <form   action="/salvarcomentario" method="post">
+                                    <div class="containerArquivoSeuComentarComentario">
+
+                                    </div>
+                                    <input  id="textSeuComentarComentario`+comentario.idComentario+`" class="textSeuComentarComentario" type="text" placeholder="Escreva um comentário" name="textSeuComentarComentario">
+                                    <div style="display: inline; color:#777;position:absolute;right:30px;">
+                                        <input name="idComentarComentario" type="text" value="`+comentario.idComentario+`" hidden>
+                                        <input onchange="carregarArquivosComentario(this,'`+comentario.idComentario+`')" name="arquivoComentarioUpload" type="file" accept="image/*,video/*" class="arquivoComentarioUpload" id="arquivoComentarioUpload`+comentario.idComentario+`" hidden />
+                                        <label style="cursor: pointer;" for="arquivoComentarioUpload`+comentario.idComentario+`"><i class="fas fa-images fa-1x"></i></label>
+                                    </div>
+                                </form>
+
+                        </div>
+
+                   </div>
+                   <!--fim do comentarComentarios-->
                </div>
                
            </div>
@@ -747,18 +1230,23 @@ console.log('totComentarios: '+totComentarios+" totcurtidas: "+totCurtidaPostage
 
 
 
-        $(containerComentarios).prepend(comentarioElement);
+        $(containerComentarios).append(comentarioElement);
 
     });
 
 
       
    }
+   function mostrarResponder(ele){
+       $("#containerSeuComentario"+ele).css({
+           display:'block',
+       })
+   }
  
    //função para mostrar o container ou esconder
   function esconderMostrarContainer(elemento){
 
-    var  div= $("#"+elemento).closest('div.row').next('hr').next('div#containerComentarios');
+    var  div= $("#"+elemento).closest('div.row').siblings('.postagemComentarioId').find('div#containerComentarios');
     console.log(div);
     console.log(div[0].classList[0]);
 
@@ -970,11 +1458,12 @@ console.log('totComentarios: '+totComentarios+" totcurtidas: "+totCurtidaPostage
         dataType:'json',
         success:data=>{
              console.log(data);
-           
-             curtirEDescutir(tagI,idPostagem,data);
+             
             
         },
 
+    }).done(data=>{
+        curtirEDescutir(tagI,idPostagem,data);
     });
 
       
@@ -982,7 +1471,10 @@ console.log('totComentarios: '+totComentarios+" totcurtidas: "+totCurtidaPostage
  
    }
 
+
    function curtirEDescutir(tagI,idPostagem,curtiu){
+    console.log('nome da tag i é ='+tagI+' id da postagem='+idPostagem+'curtiu='+curtir);
+
     if (!curtiu) { //se ele nao curtiu
         console.log('entrou em curtir');
         $('#' + tagI).css({
@@ -995,7 +1487,8 @@ console.log('totComentarios: '+totComentarios+" totcurtidas: "+totCurtidaPostage
           data:'idPostagem='+idPostagem,
           dataType:'json',
           success:data=>{
-             $("#totCurtidas"+idPostagem).html(data);
+              console.log('o total de curtidas é '+data);
+             
 
              console.log(data);
 
@@ -1009,6 +1502,8 @@ console.log('totComentarios: '+totComentarios+" totcurtidas: "+totCurtidaPostage
              });
             
           }
+        }).done(data=>{
+            $("#totCurtidas"+idPostagem).html(data);
         });
 
   
@@ -1026,7 +1521,7 @@ console.log('totComentarios: '+totComentarios+" totcurtidas: "+totCurtidaPostage
          data:'idPostagem='+idPostagem,
          dataType:'json',
          success:data=>{
-             $("#totCurtidas"+idPostagem).html(data);
+        
              console.log(data);
 
          },
@@ -1039,12 +1534,118 @@ console.log('totComentarios: '+totComentarios+" totcurtidas: "+totCurtidaPostage
             });
            
          }
+       }).done(data=>{
+            $("#totCurtidas"+idPostagem).html(data);
        });
     }
    }
+
+   //curtir e descurtir comentarios
+function curtirComentario(tag,idComentario,idUsuario) {
+    console.log('tagI: '+tag+" id do comentario: "+idComentario);
+
+  //requisição ajax apara pegar  se o usuarioCurtiu
+ var curtiu=0;
+    $.ajax({
+     type:'post',
+     url:'/miniframework/public/verificacurtidacomentario',
+     data:'idComentario='+idComentario+'&idUsuario='+idUsuario,
+     dataType:'json',
+     success:data=>{
+          console.log(data);
+           
+     },
+
+ }).done(data=>{
+    curtirEDescutirComentario(tag,idComentario,data);
+ });
+
+   
+
+
+}
+
+
+function curtirEDescutirComentario(tag,idComentario,curtiu){
+ console.log('nome da tag i é ='+tag+' id da postagem='+idComentario+'curtiu='+curtiu);
+
+ if (!curtiu) { //se ele nao curtiu
+     console.log('entrou em curtir');
+     $('#' + tag).css({
+         color: '#3E8AF4'
+     })
+
+     $.ajax({
+       type:'post',
+       url:'/miniframework/public/curtirComentario',
+       data:'idComentario='+idComentario,
+       dataType:'json',
+       success:data=>{
+           console.log('o total de curtidas é '+data);
+          
+
+          console.log(data);
+
+       },
+       error:error=>{
+          Swal.fire({
+              title: 'nao foi possivel curtir a postagem',
+              text: error.statusText,
+              icon: 'error',
+              confirmButtonText: 'ok'
+          });
+         
+       }
+     }).done(data=>{
+         $("#totCurtidasComentario"+idComentario).html(data);
+     });
+
+
+
+  } else {
+      console.log('entrou em descurtir');
+     $('#' + tag).css({
+         color: 'black'
+     })
+
+
+     $.ajax({
+      type:'post',
+      url:'/miniframework/public/descurtirComentario',
+      data:'idComentario='+idComentario,
+      dataType:'json',
+      success:data=>{
+     
+          console.log(data);
+
+      },
+      error:error=>{
+         Swal.fire({
+             title: 'nao foi possivel curtir a postagem',
+             text: error.statusText,
+             icon: 'error',
+             confirmButtonText: 'ok'
+         });
+        
+      }
+    }).done(data=>{
+         $("#totCurtidasComentario"+idComentario).html(data);
+    });
+ }
+}
 //    function comentar(idPost,idInput){
 //        var valor =$("#"+idInput).val();
 
 //        console.log(valor);
 
 //      }
+
+
+ 
+//função para ver se o elemento foi checado
+ 
+function verChecado(e){
+   console.log($(e)[0].checked);
+ 
+}
+

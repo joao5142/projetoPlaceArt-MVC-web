@@ -1,0 +1,19 @@
+.configuracoesLink{
+    margin-bottom: 6px;
+}
+
+.inputMudarSenha{
+    margin: 10px;
+    display: block;
+}
+.textAreaDenunciar{
+    width: 300px;
+    margin: 10px;
+    display: block;
+}
+#containerMudarSenha{
+   display: none; 
+}
+#errorMudarSenha{
+    display: none;
+}

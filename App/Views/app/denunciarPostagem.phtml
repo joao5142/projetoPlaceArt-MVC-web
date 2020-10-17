@@ -1,0 +1,134 @@
+<?php
+
+use MF\Controller\Action;
+use MF\Model\Container;
+
+require_once('../../miniframework/App/Utils.php');
+Utils::verificarLogado();
+?>
+
+<!-- navegacao menu -->
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarTogglerDemo02" aria-controls="navbarTogglerDemo02" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="navbarTogglerDemo02">
+        <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
+            <li class="nav-item ">
+                <a class="nav-link" href="/miniframework/public/timeline">Home </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link disabled" href="/miniframework/public/perfil">Perfil</a>
+            </li>
+
+            <li class="nav-item">
+                <a class="nav-link disabled" href="#">Configuraçoes de conta</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="/miniframework/public/logOut">Sair</a>
+            </li>
+        </ul>
+
+
+
+
+    </div>
+</nav>
+
+
+<div class="container mt-5">
+    <div class="row pt-2">
+
+        <div class="col-md-3" id="menuUsuarioContainer">
+
+            <div id="profile">
+                <div class="perfilTopo">
+                    <form method="post" enctype="multipart/form-data" id="uploadPic">
+                        <input type="file" name="imgInp" accept="image/x-png,image/jpge,image/jpg" id="imgInp" hidden>
+                        <div class="pictureContainer">
+                            <img id="userImg" src="../public/img/user/<?php echo $this->view->user_picture ?>" />
+                            <label for="imgInp"></label>
+                        </div>
+                    </form>
+                </div>
+
+                <div class="perfilPainel">
+
+                    <div class="row mt-2 mb-2">
+                        <div class="col mb-2">
+                            <span class="perfilPainelNome"><?= $this->view->user_username ?></span>
+                        </div>
+                    </div>
+
+                    <div class="row mb-2">
+
+                        <div class="col">
+                            <span class="perfilPainelItem">Postagens</span><br />
+                            <span class="perfilPainelItemValor"><?= $this->view->totPostagens ?></span>
+                        </div>
+
+                        <div class="col">
+                            <span class="perfilPainelItem">Seguindo</span><br />
+                            <span class="perfilPainelItemValor"><?= $this->view->totSeguindo ?></span>
+                        </div>
+
+                        <div class="col">
+                            <span class="perfilPainelItem">Seguidores</span><br />
+                            <span class="perfilPainelItemValor"><?= $this->view->totSeguidores ?></span>
+                        </div>
+
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+
+        <div class="col-md-6">
+
+            <div class="row mb-2">
+                <div class="col">
+                    <div class="card">
+                        <div class="card-body">
+
+                            <p style="font-size: 50px; text-align:center" class="display-4">Denunciar Publicação</p>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="row mb-2">
+                <div class="col">
+                    <div class="card">
+                        <div id="containerPesquisa" class="card-body">
+
+                            <div class="configuracoesLink">
+                                <a style="color:#0056B3">Sua denuncia nos ajuda muito a identificar irregularidades no nosso site. Com seu apoio podemos ser um site focado apenas em arte :)</a>
+                                 <p class="mt-4">Digite abaixo o motivo da denuncia!</p>
+                                <div id="containerDenunciarConteudo">
+                                    <form id="denunciarConteudoPostagem" method="post" action="/miframework/public/salvardenuncia">
+                                        <input value="<?= $_GET['idPostagem'] ?>" name="idPostagem" type="number" hidden>
+                                        <textarea name="mensagem" class="textAreaDenunciar"></textarea>
+                                        <button style="margin: 10px;" class="btn btn-outline-info" type="submit">Ok</button>
+                                    </form>
+                                </div>
+                            </div>
+
+                        </div>
+
+
+                    </div>
+                </div>
+            </div>
+
+
+        </div>
+    </div>
+</div>
+
+
+<script charset="utf-8" src="../public/js/configuracao.js"></script>

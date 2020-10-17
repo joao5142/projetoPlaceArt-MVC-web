@@ -1,4 +1,4 @@
-
+ 
 .postagemContainer{
     padding:15px;
     border-bottom: 1px solid #e6ecf0;
@@ -77,16 +77,23 @@ div#pesquisaLateral div.searchContainer {
 
     width: 100%;
 }
+#containerPesquisaLateral{
+    overflow: auto;
+    clear:both;
+}
 
 #pesquisaLateral{
+    overflow: auto;
     width: 23%;
-    height: 67%;
+    clear:both;
+    height: 300px;
     position: fixed;
     top: 16%;
     right: 20px;
     background: #fff;
     box-shadow: 2px 2px 7px  black;
     z-index: 50;
+    box-sizing: border-box;
 }
 
 nav.navbar{
@@ -300,3 +307,10 @@ div#errorPostagens{
     visibility:hidden;
 
 }
+
+
+.botaoAtivo{
+   background-color: rgb(199, 199, 199);
+  
+}
+

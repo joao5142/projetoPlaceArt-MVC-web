@@ -1,0 +1,54 @@
+<div id="containerChat" style="position: absolute;z-index:2189127049721481239821380">
+  <div id="fecharContainerChat">
+  		<i onclick="esconderChat(this)" style="cursor:pointer" class="fas fa-times fa-2x"></i>
+  </div>
+
+  <div class="row">
+	  
+		<div id="inbox" class="column" >
+				<p class="title">Conversas</p>
+				<input autocomplete="off" id="searchUsuarioChat" type="text" maxlength="15" name="username" class="searchField" placeholder="Pesquisar usuario ">
+				
+				<div id="searchContainer">
+ 
+	   		   </div>
+
+				<div class="container" style="height: auto;">
+
+				</div>
+		</div>
+
+			<div id="chat" class="column" style="overflow-x:hidden">
+
+				<div class="empty">
+							<img src="../public/img/outros/empty.png"/>
+							<p>Selecione uma Conversa para falar com esse usuario</p>
+				</div> 
+
+			</div>
+
+			<div id="profile" class="column">
+				<p class="title">Perfil</p>
+
+				<div class="container">
+					<div class="pictureContainer">
+						<img id="userImg" src="../public/img/user/<?php echo $this->view->user_picture ?> " />
+					</div>
+
+					  
+				 		<p class="name"><?= $this->view->user_username?></p>
+						<p class="row">Online agora mesmo</p>
+						<p class="row">Membro desde  19/07/2020</p>
+
+						
+
+				</div>
+
+				 
+			</div>
+			
+	</div>
+
+</div>
+
+<script charset="utf-8" src="../public/js/mensagem.js"></script>

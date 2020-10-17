@@ -13,11 +13,21 @@ $comentariosDosComentarios=Container::getModel('ComentarComentarios');
 <div class="postagemContainer" class="row postagem">
     <div class="col">
 
-        <img class="imgPostagem" src="../public/img/user/<?= $postagem['picture'] ?>">
+        <img style="cursor:pointer" onclick="location.href='/miniframework/public/perfil?idUsuario=<?= $postagem['usuarioId']?>'" class="imgPostagem" src="../public/img/user/<?= $postagem['picture'] ?>">
 
-        <p style="display:inline;" class="nomeUsuarioPostagem"><strong><?= $postagem['name'] ?></strong><small> <span class="text text-muted">- <?= $postagem['data'] ?></span></small></p>
-        <p style="margin-top:14px"><?= $postagem['textoPostagem'] ?></p>
+        <p   style="display:inline" class="nomeUsuarioPostagem"><strong onclick="location.href='/miniframework/public/perfil?idUsuario=<?=$postagem['usuarioId']?>'" style="cursor:pointer"><?= $postagem['name'] ?></strong><small> <span class="text text-muted">- <?= $postagem['data'] ?></span></small></p>
+        <?php if($this->view->user_id == $postagem['usuarioId']){ ?>
+            <span onclick="excluirPost(<?=$postagem['postagemId']?>)" style="position:absolute;right:0px; cursor:pointer"><i class="fas fa-trash"></i></span>
+        <?php }?>
 
+        <div  style="display: inline; margin:0px 5px">
+            <span onclick="location.href='/miniframework/public/denunciarpostagem?idPostagem=<?=$postagem['postagemId']?>'" style="cursor:pointer" class="denunciarPostagem"><i class="far fa-flag"></i></span>
+            <p style="color:#7E7786; font-size: 12px; display:inline;opacity:0">denunciar postagem</p>
+        </div>
+
+        <p style="margin-top:14px"><?= $postagem['textoPostagem']?></p>
+
+        
         <!-- //Postagens VIdeo/Foto -->
         <div class="containerVideoEImagem" style="position:relative">
 
@@ -30,7 +40,7 @@ $comentariosDosComentarios=Container::getModel('ComentarComentarios');
                 </video>
 
 
-                <i id="buttonVideoPlay<?= str_replace('.mp4', '', $postagem['arquivo']) ?>" onclick="videoplay('video<?php echo str_replace('.mp4', '', $postagem['arquivo']) ?>','buttonVideoPlay<?= str_replace('.mp4', '', $postagem['arquivo']) ?>');" class="fas fa-play fa-2x buttonVideoPlay"></i>
+                <i id="buttonVideoPlay<?= str_replace('.mp4', '', $postagem['arquivo']) ?>" onclick="videoplay('video<?php echo str_replace('.mp4', '', $postagem['arquivo']) ?>','buttonVideoPlay<?= str_replace('.mp4', '', $postagem['arquivo']) ?>')" class="fas fa-play fa-2x buttonVideoPlay"></i>
                 <i id="buttonVideoRestart<?php echo str_replace('.mp4', '', $postagem['arquivo']) ?>" onclick="restart('video<?php echo str_replace('.mp4', '', $postagem['arquivo']) ?>')" class="fas fa-undo-alt fa-lg buttonVideoRestart"></i>
                 <i id="buttonVideoVolume<?php echo str_replace('.mp4', '', $postagem['arquivo']) ?>" onclick="volume('video<?php echo str_replace('.mp4', '', $postagem['arquivo']) ?>','buttonVideoVolume<?php echo str_replace('.mp4', '', $postagem['arquivo']) ?>')" class="fas fa-volume-up fa-lg buttonVideoVolume"></i>
 
@@ -72,142 +82,23 @@ $comentariosDosComentarios=Container::getModel('ComentarComentarios');
         </div>
         <hr />
         <!-- comentarios da postagem -->
+        <div class="postagemComentarioId" id="postagemComentariosId<?=$postagem['postagemId']?>">
         <div id="containerComentarios" class="hideComentarios">
             <input class="comentarioIdPostagem" hidden type="text" value="<?= $postagem['postagemId'] ?>">
-            <?php foreach($comentarios->getAll($postagem['postagemId']) as $key => $comentario) { ?>
-                
-                <div class="comentariosPostagem">
-                    <div class="comentariosContainer" style="position:relative; margin-bottom:15px;">
-                        <img style="" class="imgPostagem" src="../public/img/user/<?= $comentario['pictureUsuario'] ?>">
-                        <p style="display:inline;" class="nomeUsuarioPostagem"><strong><?= $comentario['nomeUsuario'] ?></strong></p>
+            <div id="containerComentariosInner">
 
-
-                        <!-- //comentario -->
-                        <div class="comentario">
-
-                            <p style="margin-top: 4px;" class="textoComentario"><?= $comentario['textoComentario'] ?></p>
-                            <!-- foto ou video do comentario -->
-                            <br />
-                            <div class="containerVideoEImagemComentarios" style="position:relative;">
-
-                                <?php if (isset($comentario['arquivoComentario']) && $comentario['arquivoComentario'] != '') { ?>
-
-                                    <?php if (strpos($comentario['arquivoComentario'], '.mp4') != 0) { ?>
-                                        <video width="50%" height="50%" id="videoComentario<?php echo str_replace('.mp4', '', $comentario['arquivoComentario']) ?>" style="" class="img-fluid">
-                                            <source src="../public/img/uploads/comentarios/<?= $comentario['arquivoComentario'] ?>" type="video/mp4">
-                                        </video>
-
-                                        <i id="buttonVideoPlayComentario<?= str_replace('.mp4', '', $comentario['arquivoComentario']) ?>" onclick="videoplay('videoComentario<?php echo str_replace('.mp4', '', $comentario['arquivoComentario']) ?>','buttonVideoPlayComentario<?= str_replace('.mp4', '', $comentario['arquivoComentario']) ?>');" class="fas fa-play fa-sm buttonVideoPlayComentario"></i>
-                                        <i id="buttonVideoRestartComentario<?php echo str_replace('.mp4', '', $comentario['arquivoComentario']) ?>" onclick="restart('videoComentario<?php echo str_replace('.mp4', '', $comentario['arquivoComentario']) ?>')" class="fas fa-undo-alt fa-sm buttonVideoRestart"></i>
-                                        <i id="buttonVideoVolumeComentario<?php echo str_replace('.mp4', '', $comentario['arquivoComentario']) ?>" onclick="volume('videoComentario<?php echo str_replace('.mp4', '', $comentario['arquivoComentario']) ?>','buttonVideoVolumeComentario<?php echo str_replace('.mp4', '', $comentario['arquivoComentario']) ?>')" class="fas fa-volume-up fa-sm buttonVideoVolume"></i>
-
-
-
-                                    <?php } else { ?>
-
-                                        <img width="50%" height="50%" src="../public/img/uploads/comentarios/<?= $comentario['arquivoComentario'] ?>" style="margin:0px auto margin-top: 20px;" class="img-fluid">
-
-                                    <?php } ?>
-
-
-                                <?php } ?>
-                            </div>
-
-
-                            <div id="curtirResponderComentario">
-                                <span onclick="curtirComentario">Curtir </span>
-                                <span id="comentarComentario">Responder </span>
-                                <span style="font-size: 13px;"><?= $comentarios->timing(strtotime($comentario['horaComentario'])) ?></span>
-
-                            </div>
-
-                            <!-- //comentarios dos comentarios -->
-                            <div id="containerComentarComentarios">
-
-                            <?php foreach ($comentariosDosComentarios->getAll($comentario['id']) as $key => $comentC) { ?>
-                                 
-                                    <div  class="comentarComentario" style="margin-left: 10%; margin-top:5% ; font-size:14px">
-                                    <input class="comentarComentarioIdComentario" value="<?=$comentario['id']?>" hidden></input>
-
-                                       <img style="width: 32px; height:32px" class="imgPostagem" src="../public/img/user/<?= $comentC['pictureUsuario'] ?>">
-                                        <p style="display:inline-block; font-size:14px" class="nomeUsuarioPostagem"><strong><?= $comentC['nomeUsuario'] ?></strong></p>
-                                        
-                                    <div class="comentario">
-                                            
-                                            <p style="margin-top: 4px;" class="textoComentarComentario"><?= $comentC['textoComentario'] ?></p>
-                                        
-                                            <!-- foto ou video do comentario -->
-                                            <br />
-                                            <div class="containerVideoEImagemComentarios" style="position:relative;">
-
-                                                <?php if (isset($comentC['arquivoComentario']) && $comentC['arquivoComentario'] != '') { ?>
-
-                                                    <?php if (strpos($comentC['arquivoComentario'], '.mp4') != 0) { ?>
-                                                        <video width="50%" height="50%" id="videoComentarioC<?php echo str_replace('.mp4', '', $comentC['arquivoComentario']) ?>" style="" class="img-fluid">
-                                                            <source src="../public/img/uploads/comentarios/<?= $comentC['arquivoComentario'] ?>" type="video/mp4">
-                                                        </video>
-
-                                                        <i id="buttonVideoPlayComentario<?= str_replace('.mp4', '', $comentC['arquivoComentario']) ?>" onclick="videoplay('videoComentarioC<?php echo str_replace('.mp4', '', $comentC['arquivoComentario']) ?>','buttonVideoPlayComentario<?= str_replace('.mp4', '', $comentC['arquivoComentario']) ?>');" class="fas fa-play fa-sm buttonVideoPlayComentario"></i>
-                                                        <i id="buttonVideoRestartComentario<?php echo str_replace('.mp4', '', $comentC['arquivoComentario']) ?>" onclick="restart('videoComentarioC<?php echo str_replace('.mp4', '', $comentC['arquivoComentario']) ?>')" class="fas fa-undo-alt fa-sm buttonVideoRestart"></i>
-                                                        <i id="buttonVideoVolumeComentario<?php echo str_replace('.mp4', '', $comentC['arquivoComentario']) ?>" onclick="volume('videoComentarioC<?php echo str_replace('.mp4', '', $comentC['arquivoComentario']) ?>','buttonVideoVolumeComentario<?php echo str_replace('.mp4', '', $comentC['arquivoComentario']) ?>')" class="fas fa-volume-up fa-sm buttonVideoVolume"></i>
-
-
-
-                                                    <?php } else { ?>
-
-                                                        <img width="50%" height="50%" src="../public/img/uploads/comentarios/<?= $comentC['arquivoComentario'] ?>" style="margin:0px auto margin-top: 20px;" class="img-fluid">
-
-                                                    <?php } ?>
-
-
-                                                <?php } ?>
-                                            </div>
-
-
-                                            <div id="curtirResponderComentario">
-                                                <span onclick="curtirComentarioC()">Curtir </span>
-                                                <span id="comentarComentario">Responder </span>
-                                                <span style="font-size: 13px;"><?= $comentarios->timing(strtotime($comentC['horaComentario'])) ?></span>
-
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                <?php }?>
-                                
-
-                                <div style="margin-left: 10%; margin-top:5% ; font-size:14px">
-                                        <a onclick="comentariocomentarAjax(this)" style="cursor:pointer;color: #1da1f2;text-decoration: underline;" class="verMaisComentarios">Ver mais Comentarios</a>
-                                 </div>
-
-                                <div style="margin-left: 10%; margin-top:5% ; font-size:14px" class="seuComentario">
-                                        <form action="/salvarcomentario" method="post">
-                                            <div class="containerArquivoSeuComentarComentario">
-
-                                            </div>
-                                            <input id="textSeuComentarComentario<?= $comentario['id']?>" class="textSeuComentarComentario" type="text" placeholder="Escreva um comentário" name="textSeuComentarComentario">
-                                            <div style="display: inline; color:#777;position:absolute;right:30px;">
-                                                <input name="idComentarComentario" type="text" value="<?= $comentario['id'] ?>" hidden>
-                                                <input onchange="carregarArquivosComentario(this,'<?= $comentario['id'] ?>')" name="arquivoComentarioUpload" type="file" accept="image/*,video/*" class="arquivoComentarioUpload" id="arquivoComentarioUpload<?= $comentario['id'] ?>" hidden />
-                                                <label style="cursor: pointer;" for="arquivoComentarioUpload<?= $comentario['id'] ?>"><i class="fas fa-images fa-1x"></i></label>
-                                            </div>
-                                        </form>
-
-                                </div>
-
-                           </div>
-
-
-                        </div>
-
-                    </div>
-                </div>
-            <?php } ?>
-
-
-            <div>
-                <a onclick="carregarComentariosAjax(this)" style="cursor:pointer;color: #1da1f2;text-decoration: underline;" class="verMaisComentarios">Ver mais Comentarios</a>
             </div>
+
+
+            <div class="verMaisComentarios">
+                <?php if($comentarios->getTotComentarios($postagem['postagemId']) >0){ ?>
+                    <i class="fas fa-long-arrow-alt-right"></i>
+                    <a onclick="carregarComentariosAjax(this)" style="cursor:pointer;" >Carregar Comentarios</a>              
+                 <?php }?>
+            </div>
+ 
+                                          
+            
             <div class="seuComentario">
                 <form action="/salvarcomentario" method="post">
                     <div class="containerArquivoSeuComentario">
@@ -222,6 +113,8 @@ $comentariosDosComentarios=Container::getModel('ComentarComentarios');
                 </form>
 
             </div>
+        </div>
+
         </div>
 
     </div>

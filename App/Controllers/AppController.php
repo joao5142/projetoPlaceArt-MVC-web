@@ -9,8 +9,30 @@ use MF\Model\Container;
 
 class AppController extends Action
 {
+    public function denunciarpostagem(){
+        session_start();
+        $postagens = Container::getModel('postagem');
 
+        $this->view->postagemId=$_GET['idPostagem'];
+    
+        //Total de postagem seguindo e seguidores;
+        $this->view->totPostagens = $postagens->getTotPostagens($_SESSION['id']);
+        //usuarios
 
+        $usuario = Container::getModel('usuario');
+        $usuario->__set('id', $_SESSION['id']);
+        $user = $usuario->getById();
+
+        $this->view->user_username = $user['name'];
+        $this->view->user_picture = $user['picture'];
+        $this->view->user_id = $user['id'];
+        $this->view->user_username = $user['username'];
+        $this->view->totSeguindo = $usuario->getTotSeguindo();
+        $this->view->totSeguidores = $usuario->getTotSeguidores();
+
+        $this->render('denunciarPostagem');
+    }
+ 
     public function timeline()
     {
         session_start();
@@ -44,7 +66,7 @@ class AppController extends Action
         $this->view->totSeguidores = $usuario->getTotSeguidores();
 
         //recuperando quemSeguir e criando uma variavel
-        $quemSeguir =  $usuario->getQuemSeguir();
+        $quemSeguir = $usuario->getQuemSeguir();
 
         $this->view->quemSeguir = $quemSeguir;
 
@@ -99,7 +121,48 @@ class AppController extends Action
 
     public function quemseguir()
     {
+        session_start();
+        $postagens = Container::getModel('postagem');
+
+       
+  
+        //Total de postagem seguindo e seguidores;
+        $this->view->totPostagens = $postagens->getTotPostagens($_SESSION['id']);
+        //usuarios
+
+        $usuario = Container::getModel('usuario');
+        $usuario->__set('id', $_SESSION['id']);
+        $user = $usuario->getById();
+
+        $this->view->user_username = $user['name'];
+        $this->view->user_picture = $user['picture'];
+        $this->view->user_id = $user['id'];
+        $this->view->user_username = $user['username'];
+        $this->view->totSeguindo = $usuario->getTotSeguindo();
+        $this->view->totSeguidores = $usuario->getTotSeguidores();
+
         $this->render('quemSeguir');
+    }
+
+    public function configuracao(){
+        session_start();
+        $postagens = Container::getModel('postagem');
+        //Total de postagem seguindo e seguidores;
+        $this->view->totPostagens = $postagens->getTotPostagens($_SESSION['id']);
+        //usuarios
+
+        $usuario = Container::getModel('usuario');
+        $usuario->__set('id', $_SESSION['id']);
+        $user = $usuario->getById();
+
+        $this->view->user_username = $user['name'];
+        $this->view->user_picture = $user['picture'];
+        $this->view->user_id = $user['id'];
+        $this->view->user_username = $user['username'];
+        $this->view->totSeguindo = $usuario->getTotSeguindo();
+        $this->view->totSeguidores = $usuario->getTotSeguidores();
+
+        $this->render('configuracao');
     }
 
     public function pesquisarpor()
@@ -110,6 +173,18 @@ class AppController extends Action
         $usuarios = json_encode($usuarios);
 
         print_r($usuarios);
+    }
+
+    public function deletarpostagem(){
+        $postagem = Container::getModel('postagem');
+        $postagem->__set('idPostagem',$_POST['idPostagem']);
+        $sucesso= $postagem->deletar();
+
+        $comentarios=Container::getModel('comentario');
+        $comentarios->__set('id_postagem',$_POST['idPostagem']);
+        $comentarios-> deletarTodosPostagem();
+
+        echo json_encode($sucesso);
     }
 
 
@@ -124,10 +199,19 @@ class AppController extends Action
             print_r($_FILES);
         }
 
+        $vender=0;
+        if(isset($_POST['postVendas'])){
+             $vender=1;
+        }else{
+             $vender=0;
+        }
+
+        
         session_start();
         $postagem = Container::getModel('postagem');
         $postagem->__set('id_usuario', $_SESSION['id']);
         $postagem->__set('textoPostagem', $_POST['postagemTextArea']);
+        $postagem->__set('vender',$vender);
 
 
         if (isset($_FILES)) {
@@ -146,38 +230,12 @@ class AppController extends Action
             }
         }
 
-        if ($_POST['postagemTextArea'] != '') {
+        if ($_POST['postagemTextArea'] != '' || $postagem->__get('arquivo')!='') {
             $postagem->inserir();
         }
+        
     }
 
-    public function perfil()
-    {
-        $this->view->postagens = array();
-        $this->view->totalPaginas = 1;
-        $this->view->paginaAtiva = 1;
-
-        $this->view->info_usuario['nome'] = 'Joao Paulo';
-
-        session_start();
-
-        $usuario = Container::getModel('usuario');
-        $usuario->__set('id', $_SESSION['id']);
-
-
-        $user = $usuario->getById();
-
-        $this->view->user_picture = $user['picture'];
-        $this->view->user_id = $user['id'];
-        $this->view->user_username = $user['username'];
-        $this->render('perfil');
-    }
-
-    public function atualizarWallpaperPerfil()
-    {
-        echo 'estamos em atualizar wallpaper perfil';
-        print_r($_COOKIE);
-    }
 
     public function curtir()
     {
@@ -207,12 +265,47 @@ class AppController extends Action
 
         echo json_encode($totalCurtida);
     }
+    public function curtirComentario()
+    {
+        $curtida = Container::getModel('curtida');
+        session_start();
+
+
+        $curtida->__set('idComentario', $_POST['idComentario']);
+        $curtida->__set('idUsuarioCurtiu', $_SESSION['id']);
+        $curtida->curtirComentario();
+
+        $totalCurtida = $curtida->getTotalCurtidaComentario($_POST['idComentario']);
+
+        echo json_encode($totalCurtida);
+    }
+    public function descurtirComentario()
+    {
+        $curtida = Container::getModel('curtida');
+        session_start();
+
+        $curtida->__set('idComentario', $_POST['idComentario']);
+        $curtida->__set('idUsuarioCurtiu', $_SESSION['id']);
+        $curtida->descurtirComentario();
+
+        $totalCurtida = $curtida->getTotalCurtidaComentario($_POST['idComentario']);
+
+        echo json_encode($totalCurtida);
+    }
 
    function verificacurtida(){
         $curtida = Container::getModel('curtida');
         session_start();
 
         $valor= $curtida->verificacurtida($_POST['idPostagem'], $_SESSION['id']);
+
+        echo json_encode($valor);
+    }
+    function verificacurtidacomentario(){
+        $curtida = Container::getModel('curtida');
+        session_start();
+
+        $valor= $curtida->verificacurtidaComentario($_POST['idComentario'], $_SESSION['id']);
 
         echo json_encode($valor);
     }
@@ -251,7 +344,14 @@ class AppController extends Action
     }
     function getTotComentarios(){
         $comentario=Container::getModel('comentario');
-         $resultado= $comentario->getTotComentarios($_POST['idPostagem']);
+        $resultado= $comentario->getTotComentarios($_POST['idPostagem']);
+
+        echo json_encode($resultado);
+
+    }
+    function getTotComentarComentarios(){
+        $comentario=Container::getModel('ComentarComentarios');
+        $resultado= $comentario->getTotComentarios($_POST['idComentario']);
 
         echo json_encode($resultado);
 
@@ -348,6 +448,15 @@ class AppController extends Action
         $usuario->__set('id',$_SESSION['id']);
         $user= $usuario->getUsernamePicture();
         print_r(json_encode($user));
+    }
+
+    function getVendasPostagem(){
+ 
+        $offset= (isset($_POST['offset'])) ? $_POST['offset']:0;
+        $postagem=Container::getModel('postagem');
+        $resultado= $postagem->getAllPostVendas($offset);
+
+        echo json_encode($resultado);
     }
 
    

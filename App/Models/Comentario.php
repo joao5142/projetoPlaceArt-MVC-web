@@ -50,7 +50,31 @@ use PDO;
     public function atualizar(){
 
     }
+
     public function deletar(){
+        $query="delete from comentarios where id_usuario_comentou= ? and id =? limit 1";
+        $stmt=$this->db->prepare($query);
+        $stmt->bindValue(1,$this->__get('id_usuario_comentou'));
+        $stmt->bindValue(2,$this->__get('id'));
+        $success=$stmt->execute();
+
+    }
+
+    //deleta todos comentarios do usuario
+    public function deletarTodosUser(){
+        $query="delete from comentarios where id_usuario_comentou= ?";
+        $stmt=$this->db->prepare($query);
+        $stmt->bindValue(1,$this->__get('id_usuario_comentou'));
+        $success=$stmt->execute();
+
+    }
+
+    //deleta todos comentarios de uma postagem
+    public function deletarTodosPostagem(){
+        $query="delete from comentarios where id_postagem= ?";
+        $stmt=$this->db->prepare($query);
+        $stmt->bindValue(1,$this->__get('id_postagem'));
+        $success=$stmt->execute();
 
     }
 
@@ -65,7 +89,7 @@ use PDO;
 
     }
     public function getAll($idPost){
-        $query="select comentarios.id,u.name as nomeUsuario,u.picture as pictureUsuario,textoComentario,arquivoComentario,horaComentario from comentarios left join usuario as u on u.id=id_usuario_comentou
+        $query="select comentarios.id as idComentario,u.name as nomeUsuario,u.picture as pictureUsuario,textoComentario,arquivoComentario,horaComentario from comentarios left join usuario as u on u.id=id_usuario_comentou
         where id_postagem = ?  order by horaComentario desc limit 2";
         $stmt= $this->db->prepare($query);
         $stmt->bindValue(1,$idPost);
@@ -100,7 +124,7 @@ use PDO;
 
     public function getAllOffset($idPost,$offset){
     
-        $query="select u.name as nomeUsuario,u.picture as pictureUsuario,textoComentario,arquivoComentario,horaComentario from comentarios left join usuario as u on u.id=id_usuario_comentou
+        $query="select comentarios.id as idComentario,u.name as nomeUsuario,u.picture as pictureUsuario,textoComentario,arquivoComentario,horaComentario from comentarios left join usuario as u on u.id=id_usuario_comentou
         where id_postagem = ?  order by horaComentario desc limit 2 offset $offset";
         $stmt= $this->db->prepare($query);
         $stmt->bindValue(1,$idPost);

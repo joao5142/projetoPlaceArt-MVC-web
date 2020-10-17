@@ -16,6 +16,7 @@ class Usuario extends Model
      private   $secure;
      private   $creation;
      private   $rpPass;
+     private   $wallpaper;
 
 
      public function __get($attr)
@@ -82,6 +83,12 @@ class Usuario extends Model
      }
      public function deletar()
      {
+          $query="delete from usuario where (id=?) limit 1";
+          $stmt=$this->db->prepare($query);
+          $stmt->bindValue(1,$this->__get('id')); 
+          $success=$stmt->execute();
+
+          return $success;
      }
      public function getUsernamePicture(){
           $query="select name,picture from usuario where (id=?) limit 1";
@@ -105,7 +112,7 @@ class Usuario extends Model
      }
      public function getQuemSeguir(){
           $offset = rand(0,11);
-          $query="select u.name,u.picture from usuario as u  limit 4 offset $offset";
+          $query="select u.id,u.name,u.picture from usuario as u  limit 4 offset $offset";
           $stmt= $this->db->prepare($query);
   
           $stmt->execute();
@@ -134,7 +141,7 @@ class Usuario extends Model
           if($valor==""){
                $valor="-340929";
           }
-          $query="select * from usuario where name like '$valor%' limit 4 offset $offset";
+          $query="select * from usuario where name like '$valor%' or username like '$valor%'  limit 4 offset $offset";
           $stmt=$this->db->prepare($query);
           $success=$stmt->execute();
 
@@ -197,6 +204,16 @@ class Usuario extends Model
 
      }
 
+     public function updateWallpaper(){
+          $query='update usuario set wallpaper = ? where id = ?';
+          $stmt=$this->db->prepare($query);
+          $stmt->bindValue(1,$this->__get('wallpaper'));
+          $stmt->bindValue(2,$this->__get('id'));
+          $success=$stmt->execute();
+
+          return $success;
+     }
+
      public function getByName($value){
           $query='select name,username,picture,online,creation from usuario where name like =?';
           $stmt=$this->db->prepare($query);
@@ -229,5 +246,16 @@ class Usuario extends Model
           $totSeguidores=$stmt->fetch(PDO::FETCH_ASSOC)['totSeguidores'];
 
           return $totSeguidores;
+     }
+
+     public function updateSenha(){
+          $password=password_hash($this->__get('password'),PASSWORD_DEFAULT);
+          $query='update usuario set password = ? where id = ?';
+          $stmt=$this->db->prepare($query);
+          $stmt->bindValue(1,$password);
+          $stmt->bindValue(2,$this->__get('id'));
+          $success=$stmt->execute();
+
+          return $success;
      }
 }

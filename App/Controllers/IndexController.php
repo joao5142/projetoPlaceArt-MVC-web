@@ -10,7 +10,7 @@ use MF\Model\Container;
 class IndexController extends Action {
 
 	public function index() {
-		$usuario= ['username'=>'joaopaulo123','nome'=>"Joao paulo",'email'=>'joaoPaulo3687@hotmail.com','senha'=>'5142357'];
+		$usuario= ['username'=>'','nome'=>"",'email'=>'','senha'=>''];
 		$this->view->usuario=$usuario;
 		$this->view->errorCadastro=false;
 	    $this->view->login='sucesso';

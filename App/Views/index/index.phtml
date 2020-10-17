@@ -1,9 +1,9 @@
                                     <!-- parte do login -->
 
-<div class="container-fluid h-100">
+<div class="container-fluid h-100" style="overflow:hidden">
     <div class="row h-100">
 
-        <div class="col-md-6 bannerImage">
+        <div class="col-md-6 bannerImage d-none d-md-block">
             <div class="row h-100 justify-content-center align-items-center">
                 <div>
                     <div class="communicationItem">
@@ -16,14 +16,14 @@
                     </div>
                     <div class="communicationItem">
                         <i class="far fa-comment fa-2x mr-3"></i>
-                        Converse Com seus Autores Preferidos.
+                        Converse Com seus Artistas Favoritos.
                     </div>
                 </div>
             </div>
         </div>
 
-        <div class="col-md-6 pt-4 pl-5 pr-5 login">
-            <form method="post" action="miniframework/public/autenticar">
+        <div class="col-md-6 pt-4 pl-5 pr-5 login" style="position:relative">
+            <form method="post" action="miniframework/public/autenticar" style="z-index: 219301293;position:relative;">
                 <div class="row">
                     <div class="col">
                         <input type="email" class="form-control" placeholder="E-mail" name="email">
@@ -46,10 +46,10 @@
 
             </form>
 
-            <div class="row pt-5 pl-5 pr-5">
+            <div width="100%" class="containerLogin row pt-5 pl-5 pr-5  align-items-center justify-content-center" style="">
                 <div class="col pl-5 pr-5">
                     <div class="d-flex  justify-content-center" width="100%">
-                        <img class="logo" src="../public/img/logo/3.png" width="150px" />
+                         <img src="../public/img/logo/logo_2.png" width="200px"/>
                     </div>
                     <h1 class="title">Veja as melhores artes do Brasil e do Mundo.</h1>
 
@@ -68,11 +68,11 @@
  
   <div class="col-md-6 pt-4 pl-5 pr-5 register" id="inscreverse" >
       
-      <div class="card" style="width: 36rem;" >
-          <div class="card-body align-self-top" id="caixaRegistro" >
+      <div class="card" >
+          <div class="card-body align-self-top justify-content-center" id="caixaRegistro" >
 
               <div class="d-flex justify-content-center">
-                  <img src="../public/img/logo/3.png" width="150px" />
+                  <img src="../public/img/logo/logo_2.png" width="200px" />
               </div>
 
               <div class="row">
@@ -113,9 +113,9 @@
                           </div>
                           <button type="submit" class="btn btn-primary btn-block">Criar</button>
 
-                          <?php if ($this->view->errorCadastro) { ?>
-                              <small class="form-text text-danger">Error ao tentar realizar o cadastro,Verifique se os campos foram preenchidos corretamente.</small>
-                          <?php  } ?>
+                          
+                           <small id="errorCadastro" class="form-text text-danger">Error ao tentar realizar o cadastro,Verifique se os campos foram preenchidos corretamente.</small>
+                          
                       </form>
 
                   </div>
@@ -132,3 +132,5 @@
     </div>
 
 </div>
+
+<script charset="utf-8" src="../public/js/loginERegistro.js"></script>

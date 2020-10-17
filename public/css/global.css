@@ -32,8 +32,21 @@ h2 {
 }
 
 
+ 
 
-@media (max-width: 450px) {
+/* Media querys */
+
+
+
+@media (max-width: 576px) {
+    .containerLogin{
+        position: relative;
+        padding:0px;
+        height: auto;
+    }
+    .login{
+        padding:0px
+    }
     .gallery {
         -webkit-column-count: 1;
         -moz-column-count: 1;
@@ -42,20 +55,7 @@ h2 {
         -moz-column-width: 100%;
         column-width: 100%;
     }
-}
 
-@media (max-width: 400px) {
-    .btn.filter {
-        padding-left: 1.1rem;
-        padding-right: 1.1rem;
-    }
-}
-
-/* Media querys */
-
-
-
-@media (max-width: 576px) {
     div.bannerImage {
         display: none;
     }
@@ -85,9 +85,31 @@ h2 {
         width: 100%;
     }
 
+    #inscreverse{
+        position: relative;
+        top: auto;
+        right: auto;
+        margin: 0px;
+        padding:0px
+    }
+    #profile{
+        display:none;
+    }
+    #containerChat #chat{
+        width: 71%;
+    }
+    
+
 }
 
 @media (max-width: 768px) {
+    #inscreverse{
+        position:relative;
+        top: auto;
+        right: auto;
+        margin: 0px;
+        padding:0px
+    }
     div#containerEscolhaImagem {
         height: auto;
         width: 100%;
@@ -114,7 +136,16 @@ h2 {
     }
 
 
+    #quemSeguir {
+        display: none;
+    }
+    #profile{
+        display:none;
+    }
 
+    #containerChat #chat{
+        width: 71%;
+    }
 }
 
 @media (max-width: 992px) {

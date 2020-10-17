@@ -1,0 +1,274 @@
+<?php
+use MF\Controller\Action;
+use MF\Model\Container;
+ 
+
+	require_once('../../miniframework/App/Utils.php');
+	Utils::verificarLogado();
+?>
+
+<nav class="">
+	<div class="d-flex justify-content-start" style="padding: 5px;">
+		<a href="/miniframework/public/timeline"><i class="fas fa-home fa-2x" style="cursor: pointer;color: #1da1f2;"></i></a>
+	</div>
+</nav>
+
+
+
+<div class="container mt-5">
+	<div class="row">
+
+		<!-- topo imagem,seguidores,postagens ,seguindo -->
+		<div class="col-md-12">
+			<div id="wallpaper" style="color: black;height: 360px;background-image: url(../public/img/wallpapers/uploads/<?=$this->view->user_wallpaper?>);background-size:contain">
+				<div id="profile">
+					<div class="perfilTopo">
+						<form method="post" enctype="multipart/form-data" id="uploadPic">
+							<input type="file" name="imgInp" accept="image/x-png,image/jpge,image/jpg" id="imgInp" hidden>
+							<div class="pictureContainer">
+								<img id="userImg" src="../public/img/user/<?php echo $this->view->user_picture ?>" />
+								<label for="imgInp"></label>
+							</div>
+						</form>
+					</div>
+
+
+				</div>
+			</div>
+		</div>
+
+
+		<div class="col-md-12">
+			<div class="d-flex align-sitems-center justify-content-end">
+
+                <?php if($this->view->user_id == $_SESSION['id']){ ?>
+					<i style="cursor: pointer;" class="fas fa-image fa-2x" onclick='mostrarUploadWallpaper()'></i>
+				<?php } ?>
+			</div>
+		</div>
+
+
+
+		<div class="col-md-12">
+			<div class="perfilPainel">
+
+				<div class="row mt-2 mb-2">
+					<div class="col mb-2">
+						<span class="perfilPainelNome"><?= $this->view->user_name ?></span>
+					</div>
+				</div>
+
+				<div class="row mb-2">
+
+					<div class="col">
+						<span class="perfilPainelItem">Postagens</span><br />
+						<span class="perfilPainelItemValor"><?= $this->view->totPostagens?></span>
+					</div>
+
+					<div class="col">
+						<span class="perfilPainelItem">Seguindo</span><br />
+						<span class="perfilPainelItemValor"><?= $this->view->totSeguindo?></span>
+					</div>
+
+					<div class="col">
+						<span class="perfilPainelItem">Seguidores</span><br />
+						<span id="totSeguidores" class="perfilPainelItemValor"><?=$this->view->totSeguidores?></span>
+					</div>
+					
+					<?php if(!$this->view->meuperfil){ ?>
+						<div class="col">
+							<span id="seguirDeixarSeguir" class="perfilPainelItem"><?= (!$this->view->estaSeguindo) ? 'Seguir':'Deixar de seguir' ?></span><br/>
+ 							<span id="buttonSeguirDeixarSeguir" onclick="seguirOuDeixarDeSeguir(<?= $this->view->userVisitando?>)" style="cursor:pointer" class="perfilPainelItemValor"><i class="<?=($this->view->estaSeguindo) ? 'fas fa-user-minus':'fas fa-user-plus' ?>"></i></span>
+
+ 						</div>
+					<?php } ?>
+				</div>
+
+			</div>
+		</div>
+
+		<div id="bordaPerfil">
+
+		</div>
+
+		
+		<div class="col-md-12 mt-4">
+			<div id="galeria">
+				<!-- Grid row -->
+				<div class="row">
+
+					<!-- Grid column -->
+					<div class="col-md-12 d-flex justify-content-center mb-5">
+						<button onclick="addPostagens(<?= $this->view->user_id?>);$('#postagemPerfilContainer').show()"  type="button" class="btn btn-outline-black waves-effect filter" data-rel="postagens">Postagens</button>
+
+						<button onclick="$('#postagemPerfilContainer').hide()" type="button" class="btn btn-outline-black waves-effect filter" data-rel="all">Galeria</button>
+						<button onclick="$('#postagemPerfilContainer').hide()" type="button" class="btn btn-outline-black waves-effect filter" data-rel="1">Montanhas</button>
+						<button onclick="$('#postagemPerfilContainer').hide()" type="button" class="btn btn-outline-black waves-effect filter" data-rel="2">Oceano</button>
+
+					</div>
+					<!-- Grid column -->
+
+				</div>
+				<!-- Grid row -->
+
+				<!-- Grid row -->
+				<div class="gallery" id="gallery">
+
+					<!-- Grid column -->
+					
+			 
+
+
+					<div class="mb-3 pics animation all 2">
+						<img class="img-fluid" src="https://mdbootstrap.com/img/Photos/Horizontal/Nature/4-col/img%20(73).jpg" alt="Card image cap">
+					</div>
+					<!-- Grid column -->
+
+					<!-- Grid column -->
+					<div class="mb-3 pics animation all 1">
+						<img class="img-fluid" src="https://mdbootstrap.com/img/Photos/Vertical/mountain1.jpg" alt="Card image cap">
+					</div>
+					<!-- Grid column -->
+
+					<!-- Grid column -->
+					<div class="mb-3 pics animation all 1">
+						<img class="img-fluid" src="https://mdbootstrap.com/img/Photos/Vertical/mountain2.jpg" alt="Card image cap">
+					</div>
+					<!-- Grid column -->
+
+					<!-- Grid column -->
+					<div class="mb-3 pics animation all 2">
+						<img class="img-fluid" src="https://mdbootstrap.com/img/Photos/Horizontal/Nature/4-col/img%20(35).jpg" alt="Card image cap">
+					</div>
+					<!-- Grid column -->
+
+					<!-- Grid column -->
+					<div class="mb-3 pics animation all 2">
+						<img class="img-fluid" src="https://mdbootstrap.com/img/Photos/Horizontal/Nature/4-col/img%20(18).jpg" alt="Card image cap">
+					</div>
+					<!-- Grid column -->
+
+					<!-- Grid column -->
+					<div class="mb-3 pics animation all 1">
+						<img class="img-fluid" src="https://mdbootstrap.com/img/Photos/Vertical/mountain3.jpg" alt="Card image cap">
+					</div>
+					<!-- Grid column -->
+
+				</div>
+				<!-- Grid row -->
+
+			</div>
+
+
+
+
+		</div>
+
+		<div class="col-md-12" id="postagemPerfilContainer">
+			<div class="row animation d-flex justify-content-center">
+				<div class="col-md-6">
+						
+							<div id="postagemPerfil">
+								
+							</div>
+
+							<div id="loadingPostagensPerfil" class="d-flex justify-content-center">
+								<img width="60px" height="60px" src="../public/gif/2.gif">
+							</div>
+
+							<div id="errorPostagensPerfil" class="d-flex justify-content-center d-none">
+								<p>Nao tem mais publicaçoes para vôce</p><img width="48px" height="48px"  src="../public/img/outros/empty-inbox.png"/>
+							</div>
+				</div>
+			</div>		
+	</div>
+
+		<!-- //fim da div da galeria -->
+
+	</div>
+</div>
+
+<!-- //wallpaper imagem -->
+
+<div id="containerEscolhaImagem" style="clear:both">
+	<div class="row"> 
+		<figure  class="col-4">
+			<div style="position:relative">
+				<div class="divSelecionada"></div>
+				<img class="img-fluid" alt="picture" src="../public/img/wallpapers/uploads/1.png" >
+			</div>
+		</figure>
+	 
+		<figure  class="col-4">
+			<div style="position:relative">
+				<div class="divSelecionada"></div>
+				<img class="img-fluid" alt="picture" src="../public/img/wallpapers/uploads/2.png"/>
+			</div>
+		</figure>
+	 
+		<figure class="col-4">
+			<div style="position:relative">
+				<div class="divSelecionada"></div>
+				<img class="img-fluid" alt="picture" src="../public/img/wallpapers/uploads/3.png"  />
+			</div>
+		</figure>
+	</div>
+
+	<div class="row">
+
+		<figure class="col-4">
+			<div style="position:relative">
+				<div class="divSelecionada"></div>
+				<img class="img-fluid" alt="picture" src="../public/img/wallpapers/uploads/4.png"  />
+			</div>
+		</figure>
+
+		<figure class="col-4">
+			<div style="position:relative">
+				<div class="divSelecionada"></div>
+				<img class="img-fluid" alt="picture" src="../public/img/wallpapers/uploads/5.png"  />
+			</div>
+		</figure>
+
+		<figure class="col-4">
+			<div style="position:relative">
+				<div class="divSelecionada"></div>
+				<img class="img-fluid" alt="picture" src="../public/img/wallpapers/uploads/6.png" />
+			</div>
+		</figure>
+
+	</div>
+
+	<div class="col-md-12 mt-4" style="clear:both">
+		<div id="containerUploadWallpaper" class="">
+			
+			<form class="align-items-end mb-auto mt-0 d-flex justify-content-end" method="post" enctype="multipart/form-data" id="formularioUploadWallpaper">
+ 
+			   <p  style="position:absolute;left:3px;cursor:pointer;" id="adicionarSelecionada"  >Adicionar Selecionada</p>
+			 
+			   <input type="file" name="uploadWallpaper" accept="image/*" id="uploadWallpaper" hidden />
+			   
+			   <label id="boxEscolherImagem" for="uploadWallpaper" class="d-flex align-items-center">
+
+					<span class="">Upload do fundo </span>
+
+					<i class="fas fa-image fa-2x"></i>
+				</label>
+			</form>
+		</div>
+	</div>
+</div>
+
+
+
+<div id="visualizarImagem" onclick="fecharPreviewImagem()">
+	<div class="d-flex justify-content-end">
+		<i onclick="fecharPreviewImagem()" style="margin:5px;cursor:pointer" class="fas fa-times fa-3x"></i>
+	</div>
+
+	<div id="wallpaperUploadPreview" class="d-flex align-items-center justify-content-center">
+		<img id="imgWallpaperPreview" alt="picture" src="https://mdbootstrap.com/img/Photos/Horizontal/Nature/4-col/img%20(118).jpg" class="img-fluid" />
+	</div>
+</div>
+
+<script charset="utf-8" src="../public/js/perfil.js"></script>

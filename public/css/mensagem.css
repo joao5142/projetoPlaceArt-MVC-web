@@ -1,0 +1,529 @@
+div#containerChat{
+    position: fixed;
+    top: 0px;
+    height: 100%;
+    width: 100%;
+    background-color: white;
+    z-index: 1000000000000;
+    
+}
+
+#fecharContainerChat{
+    align-items: end;
+    text-align: end;
+    padding: 5px;
+
+}
+
+
+
+/* //outros; */
+
+ 
+
+#containerChat #chat div.empty{
+    width: 50%;
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    text-align: center;
+    overflow-x: hidden;
+}
+
+
+#containerChat #chat div.topMenu{
+    width: 50%;
+    position: absolute;
+    top: 0%;
+    overflow-x: hidden;
+
+   
+}
+
+#containerChat #chat div.topMenu img{
+   float:right;
+   margin-top: 2px;
+   margin-right: 20px;
+   cursor:pointer;
+   
+}
+
+#containerChat #chat .innerContainer{
+    width: 100%;
+    height: 75vh;
+    margin-top: 10vh;
+    overflow-y: auto;
+    overflow-x: hidden;
+
+}
+
+#containerChat #chat .innerContainer p.info{
+    padding: 10px 20px;
+    text-align: center;
+    font-size: 10pt;
+}
+
+#containerChat #chat #sendMessage{
+    position: absolute;
+    bottom: 0%;
+    width: 49%;
+    height: 50px;
+    
+}
+#containerChat #chat #sendMessage #messageInput{
+    
+    width: 80%;
+    margin-left: 5%;
+    padding:10px;
+    border:none;
+    border-radius: 20px;
+    background-color: #eee;
+
+}
+
+#containerChat #chat #sendMessage label{
+    float: right;
+    margin-top: 5px;
+    margin-right: 30px;
+    cursor: pointer;
+
+}
+
+
+#containerChat #chat .innerContainer .row{
+    display: block;
+    padding: 5px 10%;
+ 
+    position: relative;
+}
+
+#containerChat #chat .innerContainer .recieved p{
+    display: inline-block;
+    padding: 10px 20px;
+    background-color: #eee;
+    border-radius: 20px;
+    max-width: 80%;
+    
+}
+
+#containerChat #chat .innerContainer .send p{
+    display: inline-block;
+    padding: 10px 20px;
+    background-color: #4cBfff;
+    color: #fff;
+    border-radius: 20px;
+    max-width: 80%;
+    
+}
+#containerChat #chat .innerContainer .send{
+   text-align: right;
+    
+}
+
+
+#containerChat #chat .innerContainer img{
+    display:inline-block;
+    background-color: #eee;
+    border-radius: 20px;
+   
+    max-width: 80%;
+    max-height: 300px;
+    padding: 10px 3%;
+    
+    margin: 5% 0px;
+    box-sizing: border-box;
+}
+
+#containerChat #chat .innerContainer img.send{
+   
+}
+ 
+
+
+/* //inbox */
+
+ 
+#containerChat #inbox input.searchField{
+    display: block;
+    margin: auto;
+    width: 90%;
+    max-width: 300px;
+    padding: 5px 10px;
+    border: none;
+    border-radius: 5px;
+    background-color: #EEE;
+}
+
+#containerChat #inbox #searchContainer{
+    display: block;
+    margin: 10px auto;
+    width: 90%;
+    max-width: 300px;
+    height: 200px;
+    overflow-y: auto;
+    padding:  10px;
+    border: none;
+    border-radius: 5px;
+    background-color: #EEE;
+    display: none;
+    box-sizing: border-box;
+    overflow-x: hidden;
+}
+
+#containerChat #inbox #searchContainer p.noResults{
+    display: block;
+    margin:auto;
+    padding: 30px;
+    text-align: center;
+    font-size: 16pt;
+}
+
+#containerChat #inbox #searchContainer div.row{
+     display:block;
+    cursor: pointer;
+}
+
+#containerChat #inbox #searchContainer div.row img{
+    display:inline-block;
+    vertical-align: top;
+    width: 48px;
+    height: 48px;
+    border-radius: 48px;
+    object-fit: cover;
+    object-position: center;
+    cursor: pointer;
+    margin-left: 15px;
+}
+
+
+#containerChat #inbox #searchContainer div.row p{
+    display:inline-block;
+    vertical-align: top;
+    font-size: 12pt;
+    padding-left: 20px;
+    padding-top: 12px;
+   
+}
+
+
+#containerChat #inbox .container div.empty{
+    width: 90%;
+    display: block;
+    margin: 20px auto;
+}
+
+#containerChat #inbox .container div.chat{
+    display:block;
+    margin: 10px 30px;
+    padding: 10px 15px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+#containerChat #inbox .container div.chat:hover{
+   background-color: #EEE;
+}
+#containerChat #inbox .container div.new{
+    font-weight: bold;
+}
+
+#containerChat #inbox .container div.chat img{
+    display:inline-block;
+    vertical-align: top;
+    width: 48px;
+    height: 48px;
+    border-radius: 48px;
+    object-fit: cover;
+    object-position: center;
+    cursor: pointer;
+}
+
+
+#containerChat #inbox div.chat p{
+    display:inline-block;
+    vertical-align: top;
+    font-size: 12pt;
+    padding-left: 20px;
+    padding-top: 12px;
+}
+
+
+/* //profile */
+
+
+ 
+
+#containerChat #profile div.sair{
+    font-weight: bold;
+    text-align: right;
+     
+    position: absolute;
+    bottom: 15px;
+    
+    padding: 15px;
+    width: 25%;
+    box-sizing: border-box;
+}
+
+#containerChat #profile div.menu button{
+display: block;
+margin:auto;
+width: 90%;
+border: none;
+border-top: 1px solid #ccc;
+font-size: 16pt;
+background: transparent url(../img/outros/logout.png) no-repeat scroll 10px 17px;
+background-size: 30px;
+padding: 15px 0px;
+text-align: right;
+ 
+}
+
+
+#containerChat #profile div.menu button:hover{
+      width: 60%;
+       
+ }
+
+ #containerChat  #profile .pictureContainer{
+     display: block;
+     margin: auto;
+     width: 90%;
+     max-width: 200px;
+ }
+
+ #containerChat #profile .pictureContainer img{
+    display: block;
+    margin: auto;
+    width: 100%;
+    height: 200px;
+    border-radius: 200px;
+    object-fit: cover;
+    object-position: center;
+}
+
+#containerChat #profile .pictureContainer label{
+   position: absolute;
+   margin-top: -200px;
+   width: 200px;
+   height: 200px;
+   border-radius: 200px;
+   opacity: 0;
+   background:#000 url(../img/upload-pic.png) no-repeat center ;
+   cursor: pointer;
+}
+
+#containerChat #profile .pictureContainer label:hover{
+    opacity: 0.7;
+   
+ }
+
+ #containerChat #profile p.name{
+     display: block;
+     margin: auto;
+     padding: 0px 20px;
+     text-align: center;
+     font-size: 16pt;
+     font-weight: bold;
+     margin-bottom: 40px;
+ }
+
+ #containerChat #profile p.block{
+    display: block;
+    margin:10px 30px;
+    padding: 10px 15px;
+    background-color: #ccc;
+    border-radius: 5px;
+}
+
+ 
+
+/* //homepage */
+
+#containerChat #inbox{
+    display: inline-block;
+    vertical-align: top;
+    width: 25%;
+    box-shadow: 21px 10px 30px -37px rgba(0,0,0,0.75);
+    overflow-y: auto;
+}
+
+#containerChat #chat{
+    display: inline-block;
+    vertical-align: top;
+    width: 49%;
+}
+#containerChat #profile{
+    display: inline-block;
+    vertical-align: top;
+    width: 25%;
+    box-shadow: -21px 10px 30px -37px rgba(0,0,0,0.75);
+    overflow-y: auto;
+}
+
+#containerChat .column{
+    height: 100vh;
+}
+
+#containerChat .column p.title{
+    font-weight: bold;
+    font-size: 24pt;
+    padding: 20px 30px;
+}
+
+#containerChat div.empty img{
+    display: block;
+    margin: auto;
+    max-width: 90%;
+    max-height: 500px;
+}
+
+#containerChat div.empty p{
+   padding: auto 10%;
+   text-align: center;
+   color:#665;
+   margin-top: 20px;
+   font-size: 14pt;
+}
+
+#containerChat{
+    overflow: hidden;
+ }
+
+
+@media (max-width: 576px) {
+    #containerChat #inbox{
+        width: 35%;
+    }
+    #containerChat #chat{
+        width: 65%;
+    }
+    #containerChat #profile{
+        display :none;
+    }
+     
+    #containerChat #inbox .container div.chat{
+        display:block;
+        margin: 10px 5px;
+        padding: 10px 5px;
+        border-radius: 5px;
+        cursor: pointer;
+    }
+    #containerChat #inbox #searchContainer div.row img{
+        display:inline-block;
+        vertical-align: top;
+        width: 36px;
+        height: 36px;
+        border-radius: 36px;
+        object-fit: cover;
+        object-position: center;
+        cursor: pointer;
+        margin-left: 15px;
+    }
+    
+    
+    #containerChat #inbox #searchContainer div.row p{
+        display:inline-block;
+        vertical-align: top;
+        font-size: 8pt;
+        padding-left: 20px;
+        padding-top: 12px;
+       
+    }
+    
+
+    #containerChat #inbox .container div.chat img{
+        display:inline-block;
+        vertical-align: top;
+        width: 36px;
+        height: 36px;
+        border-radius: 36px;
+        object-fit: cover;
+        object-position: center;
+        cursor: pointer;
+    }
+    
+    
+    #containerChat #inbox div.chat p{
+        display:inline-block;
+        vertical-align: top;
+        font-size: 8pt;
+        padding-left: 10px;
+        padding-top: 7px;
+    }
+    #containerChat .column p.title{
+        font-weight: bold;
+        font-size: 20pt;
+        padding: 20px 30px;
+    }
+    
+
+}
+
+@media (max-width: 768px) {
+    #containerChat #inbox{
+        width: 35%;
+    }
+    #containerChat #chat{
+        width: 65%;
+    }
+    #containerChat #profile{
+        display :none;
+    }
+    #containerChat #inbox .container div.chat img{
+        display:inline-block;
+        vertical-align: top;
+        width: 36px;
+        height: 36px;
+        border-radius: 36px;
+        object-fit: cover;
+        object-position: center;
+        cursor: pointer;
+    }
+
+    #containerChat #inbox #searchContainer div.row img{
+        display:inline-block;
+        vertical-align: top;
+        width: 36px;
+        height: 36px;
+        border-radius: 36px;
+        object-fit: cover;
+        object-position: center;
+        cursor: pointer;
+        margin-left: 15px;
+    }
+    
+    
+    #containerChat #inbox #searchContainer div.row p{
+        display:inline-block;
+        vertical-align: top;
+        font-size: 8pt;
+        padding-left: 10px;
+        padding-top: 12px;
+       
+    }
+    
+    
+    #containerChat #inbox div.chat p{
+        display:inline-block;
+        vertical-align: top;
+        font-size: 8pt;
+        padding-left: 10px;
+        padding-top: 7px;
+    }
+    #containerChat .column p.title{
+        font-weight: bold;
+        font-size: 20pt;
+        padding: 20px 30px;
+    }
+    
+
+}
+
+@media (max-width: 992px) {
+    #containerChat #profile{
+        display :none;
+    }
+
+
+}

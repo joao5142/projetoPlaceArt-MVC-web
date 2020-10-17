@@ -107,7 +107,7 @@ use PDO;
     public function getAllOffset($idComentario,$offset){
         date_default_timezone_set('America/Sao_Paulo');
 
-        $query="select u.name as nomeUsuario,u.picture as pictureUsuario,textoComentario,arquivoComentario,horaComentario from comentarcomentarios left join usuario as u on u.id=id_usuario_comentou
+        $query="select id_comentario as idComentario,u.name as nomeUsuario,u.picture as pictureUsuario,textoComentario,arquivoComentario,horaComentario from comentarcomentarios left join usuario as u on u.id=id_usuario_comentou
         where id_comentario = ?  order by horaComentario desc limit 2 offset $offset";
         $stmt= $this->db->prepare($query);
         $stmt->bindValue(1,$idComentario);
@@ -124,11 +124,11 @@ use PDO;
     }
 
 
-    public function getTotComentarios($idPost){
+    public function getTotComentarios($idComentario){
         $tot=0;
-        $query="select count(*) as totComentarios from comentarios where id_comentario = ?";
+        $query="select count(*) as totComentarios from comentarcomentarios where id_comentario = ?";
         $stmt= $this->db->prepare($query);
-        $stmt->bindValue(1,$idPost);
+        $stmt->bindValue(1,$idComentario);
 
         $stmt->execute();
         $tot = $stmt->fetch(PDO::FETCH_ASSOC)['totComentarios'];

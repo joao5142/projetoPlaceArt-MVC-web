@@ -49,13 +49,7 @@
 
 
  /* //pagina perfil */
- #wallpaper{
-    color: black;
-    height: 360px;
-    background-image: url(../img/wallpapers/wallpaperPadrao/1.png);  
-    
-    
-}
+
 
 #containerUploadWallpaper,#textoWallpaper{
    width: 100%;
@@ -179,3 +173,14 @@
     transform: scale(1);
  }
     
+ #loadingPostagensPerfil{
+    visibility:hidden;
+ }
+
+ #errorPostagensPerfil{
+    visibility:hidden;
+
+ }
+ #containerEscolhaImagem{
+     display:none;
+ }

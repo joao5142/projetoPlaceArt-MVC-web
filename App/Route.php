@@ -39,6 +39,17 @@ class Route extends Bootstrap {
 			'controller' => 'AppController',
 			'action' => 'timeline'
 		);
+		
+		$routes['configuracao'] = array(
+			'route' => '/configuracao',
+			'controller' => 'AppController',
+			'action' => 'configuracao'
+		);
+		$routes['chat'] = array(
+			'route' => '/chat',
+			'controller' => 'AppController',
+			'action' => 'chat'
+		);
 		$routes['uploadpic'] = array(
 			'route' => '/uploadpic',
 			'controller' => 'AppController',
@@ -55,18 +66,86 @@ class Route extends Bootstrap {
 			'controller' => 'AppController',
 			'action' => 'pesquisarpor'
 		);
+		$routes['pesquisarpormensagem'] = array(
+			'route' => '/pesquisarpormensagem',
+			'controller' => 'ChatController',
+			'action' => 'pesquisarpormensagem'
+		);
+		$routes['getconversas'] = array(
+			'route' => '/getconversas',
+			'controller' => 'ChatController',
+			'action' => 'getconversas'
+		);
+		
+		$routes['sendMenssage'] = array(
+			'route' => '/sendMenssage',
+			'controller' => 'ChatController',
+			'action' => 'sendMenssage'
+		);
+		$routes['getMessagesChat'] = array(
+			'route' => '/getMessagesChat',
+			'controller' => 'ChatController',
+			'action' => 'getMessagesChat'
+		);
+		$routes['getUsuarioId'] = array(
+			'route' => '/getUsuarioId',
+			'controller' => 'ChatController',
+			'action' => 'getUsuarioId'
+		);
 
 		$routes['criarpostagem'] = array(
 			'route' => '/criarpostagem',
 			'controller' => 'AppController',
 			'action' => 'criarpostagem'
 		);
+		$routes['deletarpostagem'] = array(
+			'route' => '/deletarpostagem',
+			'controller' => 'AppController',
+			'action' => 'deletarpostagem'
+		);
+		$routes['denunciarpostagem'] = array(
+			'route' => '/denunciarpostagem',
+			'controller' => 'AppController',
+			'action' => 'denunciarpostagem'
+		);
+		$routes['salvardenuncia'] = array(
+			'route' => '/salvardenuncia',
+			'controller' => 'ConfiguracaoController',
+			'action' => 'salvardenuncia'
+		);
+		
+		$routes['getUltimaMessageChat'] = array(
+			'route' => '/getUltimaMessageChat',
+			'controller' => 'ChatController',
+			'action' => 'getUltimaMessageChat'
+		);
 
 		$routes['perfil'] = array(
 			'route' => '/perfil',
-			'controller' => 'AppController',
+			'controller' => 'PerfilController',
 			'action' => 'perfil'
-		);
+		); 
+		$routes['getPostagensPerfil'] = array(
+			'route' => '/getPostagensPerfil',
+			'controller' => 'PerfilController',
+			'action' => 'getPostagensPerfil'
+		); 
+		$routes['seguir'] = array(
+			'route' => '/seguir',
+			'controller' => 'PerfilController',
+			'action' => 'seguir'
+		); 
+		$routes['deixarseguir'] = array(
+			'route' => '/deixarseguir',
+			'controller' => 'PerfilController',
+			'action' => 'deixarseguir'
+		); 
+
+		$routes['verificaseguindo'] = array(
+			'route' => '/verificaseguindo',
+			'controller' => 'PerfilController',
+			'action' => 'verificaseguindo'
+		); 
 		$routes['curtir'] = array(
 			'route' => '/curtir',
 			'controller' => 'AppController',
@@ -79,14 +158,25 @@ class Route extends Bootstrap {
 		);
 		$routes['atualizarWallpaperPerfil'] = array(
 			'route' => '/atualizarWallpaperPerfil',
-			'controller' => 'AppController',
+			'controller' => 'PerfilController',
 			'action' => 'atualizarWallpaperPerfil'
+		);
+		$routes['getWallpaperUser'] = array(
+			'route' => '/getWallpaperUser',
+			'controller' => 'PerfilController',
+			'action' => 'getWallpaperUser'
 		);
 		$routes['salvarcomentario'] = array(
 			'route' => '/salvarcomentario',
 			'controller' => 'AppController',
 			'action' => 'salvarcomentario'
 		);
+		$routes['getVendasPostagem'] = array(
+			'route' => '/getVendasPostagem',
+			'controller' => 'AppController',
+			'action' => 'getVendasPostagem'
+		);
+		
 
 		$routes['timing'] = array(
 			'route' => '/timing',
@@ -98,6 +188,23 @@ class Route extends Bootstrap {
 			'controller' => 'AppController',
 			'action' => 'verificacurtida'
 		);
+		$routes['verificacurtidacomentario'] = array(
+			'route' => '/verificacurtidacomentario',
+			'controller' => 'AppController',
+			'action' => 'verificacurtidacomentario'
+		);
+		$routes['curtirComentario'] = array(
+			'route' => '/curtirComentario',
+			'controller' => 'AppController',
+			'action' => 'curtirComentario'
+		);
+		$routes['descurtirComentario'] = array(
+			'route' => '/descurtirComentario',
+			'controller' => 'AppController',
+			'action' => 'descurtirComentario'
+		);
+		
+		
 		$routes['getComentarios'] = array(
 			'route' => '/getComentarios',
 			'controller' => 'AppController',
@@ -119,6 +226,17 @@ class Route extends Bootstrap {
 			'controller' => 'AppController',
 			'action' => 'getTotCurtidas'
 		); 
+		$routes['getTotComentarios'] = array(
+			'route' => '/getTotComentarios',
+			'controller' => 'AppController',
+			'action' => 'getTotComentarios'
+		); 
+		$routes['getTotComentarComentarios'] = array(
+			'route' => '/getTotComentarComentarios',
+			'controller' => 'AppController',
+			'action' => 'getTotComentarComentarios'
+		); 
+		
 
 		$routes['getSeuComentario'] = array(
 			'route' => '/getSeuComentario',
@@ -140,6 +258,29 @@ class Route extends Bootstrap {
 			'controller' => 'AppController',
 			'action' => 'salvarcomentarComentario'
 		); 
+		$routes['mensagem'] = array(
+			'route' => '/mensagem',
+			'controller' => 'MensagemController',
+			'action' => 'mensagem'
+		); 
+
+		//rotas DE CONFIGURACAO
+		$routes['deletarconta'] = array(
+			'route' => '/deletarconta',
+			'controller' => 'ConfiguracaoController',
+			'action' => 'deletarconta'
+		);
+		$routes['denunciarPostagem'] = array(
+			'route' => '/denunciarPostagem',
+			'controller' => 'ConfiguracaoController',
+			'action' => 'denunciarPostagem'
+		);
+		$routes['mudarsenha'] = array(
+			'route' => '/mudarsenha',
+			'controller' => 'ConfiguracaoController',
+			'action' => 'mudarsenha'
+		);
+
 
 		
 

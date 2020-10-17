@@ -33,18 +33,34 @@ Utils::verificarLogado();
 			</li>
 
 			<li class="nav-item">
-				<a class="nav-link disabled" href="#">Configuraçoes de conta</a>
+				<a class="nav-link disabled" href="/miniframework/public/configuracao">Configuraçoes de conta</a>
 			</li>
 			<li class="nav-item">
 				<a class="nav-link" href="/miniframework/public/logOut">Sair</a>
 			</li>
+			<li class="nav-item d-sm-block d-md-none">
+				<a style="cursor:pointer" onclick="mostrarChat()" class="nav-link d-sm-block d-md-none">Mensagem</a>
+			</li>
 		</ul>
+
+		 <div class="d-none d-md-block" style="cursor:pointer;margin-right:15px;margin-left:15px">
+		 	<a style="text-decoration: none;" target="_blank" href="/miniframework/public/mensagem"><i    class="fas fa-comment-dots fa-2x d-none d-md-block"></i></a>
+
+		</div>
+
 		<form id="pesquisarUsuarios" class="form-inline my-2 my-lg-0" method="post" action="/pesquisarUsuarios">
 			<input id="pesquisarPorTimeline" class="form-control mr-sm-2" type="search" placeholder="Search" name="pesquisarpor">
-			<button class="btn btn-outline-info my-2 my-sm-0" type="submit">Search</button>
+		   
 		</form>
 	</div>
 </nav>
+<!-- seta de subir  -->
+<div id="back-to-top" onclick="subirRolagem()" style="z-index:200000000000000000000000000;position: fixed; bottom: 15px; left:15px;cursor:pointer">
+	<i style="margin: 0px; padding:0px"   class="fas fa-sort-up fa-2x d-flex justify-content-center"></i>
+	<p style="margin: 0px; padding:0px"><strong>Subir</strong></p>
+</div>
+
+<!-- CHAT DO APLICATIVO -->
 
 
 <!-- timelineConteudo -->
@@ -105,9 +121,13 @@ Utils::verificarLogado();
 
 
 					<form id="formularioPostagem" method="post" enctype="multipart/form-data" action="miniframwork/postagem">
-
+					
 						<textarea id="textTweet" name="postagemTextArea" class="form-control" id="exampleFormControlTextarea1" rows="3"></textarea>
-
+						<div  style="margin-top:15px;display: inline-block; border-radius:20px;background-color:#1DA1F2;border:none;color:white;padding:1px;padding-left:4px;padding-right:4px">
+								 
+						        <input onclick="verChecado(this)" style="line-height:50%;border:none" name="postVendas" type="checkbox" id="postVendas">
+								<label style="line-height:50%" for="postVendas">Postagem Venda</label>
+						</div>
 						<!-- //container da imagem q vai ser carregada -->
 
 						<div class="row mt-4">
@@ -140,6 +160,39 @@ Utils::verificarLogado();
 				</div>
 			</div>
 
+			<!-- //botoes social e vendas -->
+			<div class="col-md-12 mt-4">
+					<div id="galeria">
+						<!-- Grid row -->
+						<div class="row">
+
+							<!-- Grid column -->
+							<div class="col-md-12 d-flex justify-content-center mb-5">
+								<button id="botaoSocial" style="cursor: pointer;"   onclick="socialPostagens();"  type="button" class="btn btn-outline-black waves-effect filter botaoAtivo" data-rel="postagens">Social</button>
+
+								<button id="botaoVendas" style="cursor: pointer;" onclick="vendasPostagens()" type="button" class="btn btn-outline-black waves-effect filter" data-rel="all">Vendas</button>
+								
+
+							</div>
+							<!-- Grid column -->
+
+						</div>
+						<!-- Grid row -->
+
+						<!-- Grid row -->
+						<div class="gallery" id="gallery">
+
+
+						</div>
+						<!-- Grid row -->
+
+					</div>
+
+
+
+
+				</div>
+
 
 
         <!-- postagens de todo mundo -->
@@ -164,7 +217,7 @@ Utils::verificarLogado();
 		<!-- fim postagens -->
 
 		<!-- quem seguir -->
-		<div id="quemSeguir" class="col-md-3 d-none d-md-block" style="position:fixed;right:0px">
+		<div id="quemSeguir" class="col-md-3 d-none d-lg-block" style="position:fixed;right:0px">
 			<div class="quemSeguir">
 				<span class="quemSeguirTitulo">Quem seguir</span><br />
 				<hr />
@@ -173,9 +226,9 @@ Utils::verificarLogado();
 						<?php foreach ($this->view->quemSeguir as $key => $user) {  ?>
 							<div class="row serchContainerMenu mb-4">
 								<div class="searchContainer col">
-									<img src="../public/img/user/<?=$user['picture']?>">
-									<p><?=$user['name'] ?></p>
-
+									<img style="cursor:pointer;" onclick="location.href='/miniframework/public/perfil?idUsuario=<?=$user['id']?>'"  src="../public/img/user/<?=$user['picture']?>">
+									<p class="textUserSeguir" style="cursor:pointer;" onclick="location.href ='/miniframework/public/perfil?idUsuario=<?=$user['id']?>'"><?=$user['name'] ?></p>
+            
 								</div>
 
 
@@ -196,3 +249,6 @@ Utils::verificarLogado();
 		</div>
 	</div>
 </div>
+
+<script charset="utf-8" src="../public/js/timeline.js"></script>
+<script charset="utf-8" src="../public/js/quemseguir.js"></script>
