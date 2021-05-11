@@ -71,6 +71,20 @@ class Usuario extends Model
 
           $success=$stmt->execute();
 
+          $id=$this->db->lastInsertId();
+
+          $query="INSERT INTO galeria (imagem, posicao, usuario) VALUES
+                    ('img (73).jpg', 1, :id),
+                    ('mountain1.jpg', 2, :id),
+                    ('mountain2.jpg', 3, :id),
+                    ('img (35).jpg', 4, :id),
+                    ('img (18).jpg', 5, :id),
+                    ('mountain3.jpg', 6, :id)";
+    
+          $stmt = $this->db->prepare($query);
+          $stmt->bindValue(':id',$id);
+          $succes2=$stmt->execute();
+ 
           if($success){
                return true;
           }
@@ -136,6 +150,19 @@ class Usuario extends Model
           return $stmt->fetchAll(\PDO::FETCH_ASSOC);
      }
 
+     public function getAmigos(){
+          
+          $query="select u.id,u.name,u.picture,u.online,u.onlineSN from usuario as u inner join usuario_seguindo as us on u.id=us.id_usuario_seguindo where us.id_usuario=?";
+          $stmt=$this->db->prepare($query);
+          $stmt->bindValue(1,$this->__get('id'));
+          $success=$stmt->execute();
+
+          $usuarios= $stmt->fetchAll(\PDO::FETCH_ASSOC);
+
+      
+          return $usuarios;
+     }
+
      public function getAll($valor,$offset)
      {
           if($valor==""){
@@ -143,6 +170,23 @@ class Usuario extends Model
           }
           $query="select * from usuario where name like '$valor%' or username like '$valor%'  limit 4 offset $offset";
           $stmt=$this->db->prepare($query);
+          $success=$stmt->execute();
+
+          $usuarios= $stmt->fetchAll(\PDO::FETCH_ASSOC);
+
+      
+          return $usuarios;
+          
+
+     }
+
+     public function getAmigosOffset($valor)
+     {
+           
+          $query="select u.id,u.name,u.picture,u.online,u.onlineSN from usuario as u inner join usuario_seguindo as us on u.id=us.id_usuario_seguindo where us.id_usuario=? and (u.name like '$valor%' or u.username like '$valor%')";
+          $stmt=$this->db->prepare($query);
+          $stmt->bindValue(1,$this->__get('id'));
+
           $success=$stmt->execute();
 
           $usuarios= $stmt->fetchAll(\PDO::FETCH_ASSOC);
@@ -203,6 +247,25 @@ class Usuario extends Model
           return $success;
 
      }
+     public function updateonline(){
+          $query='update usuario set online = now(),onlineSN= "s" where id = ?';
+          $stmt=$this->db->prepare($query);
+          $stmt->bindValue(1,$this->__get('id'));
+          $success=$stmt->execute();
+
+          return $success;
+     }
+
+     public function offline(){
+          $query='update usuario set onlineSN= "n" where id = ?';
+          $stmt=$this->db->prepare($query);
+          $stmt->bindValue(1,$this->__get('id'));
+          $success=$stmt->execute();
+
+          return $success;
+     }
+
+     
 
      public function updateWallpaper(){
           $query='update usuario set wallpaper = ? where id = ?';

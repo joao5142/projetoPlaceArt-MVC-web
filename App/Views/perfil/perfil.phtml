@@ -9,7 +9,7 @@ use MF\Model\Container;
 
 <nav class="">
 	<div class="d-flex justify-content-start" style="padding: 5px;">
-		<a href="/miniframework/public/timeline"><i class="fas fa-home fa-2x" style="cursor: pointer;color: #1da1f2;"></i></a>
+		<a href="/miniframework/public/timeline"><i class="fas fa-home fa-2x" style="cursor: pointer;color: black;"></i></a>
 	</div>
 </nav>
 
@@ -24,10 +24,16 @@ use MF\Model\Container;
 				<div id="profile">
 					<div class="perfilTopo">
 						<form method="post" enctype="multipart/form-data" id="uploadPic">
+						<?php if($this->view->user_id == $_SESSION['id']){ ?>
+
 							<input type="file" name="imgInp" accept="image/x-png,image/jpge,image/jpg" id="imgInp" hidden>
+						<?php } ?>
 							<div class="pictureContainer">
 								<img id="userImg" src="../public/img/user/<?php echo $this->view->user_picture ?>" />
+								<?php if($this->view->user_id == $_SESSION['id']){ ?>
+
 								<label for="imgInp"></label>
+								<?php } ?>
 							</div>
 						</form>
 					</div>
@@ -82,6 +88,14 @@ use MF\Model\Container;
 
  						</div>
 					<?php } ?>
+
+					<?php if(!$this->view->meuperfil){ ?>
+						<div class="col">
+							<span  class="perfilPainelItem">Mensagem</span><br/>
+ 							<span  onclick="" style="cursor:pointer" class="perfilPainelItemValor"><a style="text-decoration: none;color:black" target="_blank" href="/miniframework/public/mensagem?idUsuario=<?=$_GET['idUsuario'] ?>"><i class="fas fa-comments"></i></a></span>
+
+ 						</div>
+					<?php } ?>
 				</div>
 
 			</div>
@@ -102,8 +116,8 @@ use MF\Model\Container;
 						<button onclick="addPostagens(<?= $this->view->user_id?>);$('#postagemPerfilContainer').show()"  type="button" class="btn btn-outline-black waves-effect filter" data-rel="postagens">Postagens</button>
 
 						<button onclick="$('#postagemPerfilContainer').hide()" type="button" class="btn btn-outline-black waves-effect filter" data-rel="all">Galeria</button>
-						<button onclick="$('#postagemPerfilContainer').hide()" type="button" class="btn btn-outline-black waves-effect filter" data-rel="1">Montanhas</button>
-						<button onclick="$('#postagemPerfilContainer').hide()" type="button" class="btn btn-outline-black waves-effect filter" data-rel="2">Oceano</button>
+						<button onclick="$('#postagemPerfilContainer').hide()" type="button" class="btn btn-outline-black waves-effect filter" data-rel="1">Grade 1</button>
+						<button onclick="$('#postagemPerfilContainer').hide()" type="button" class="btn btn-outline-black waves-effect filter" data-rel="2">Grade 2</button>
 
 					</div>
 					<!-- Grid column -->
@@ -114,44 +128,103 @@ use MF\Model\Container;
 				<!-- Grid row -->
 				<div class="gallery" id="gallery">
 
-					<!-- Grid column -->
+					<!-- Grid column -->	
+					<form method="post"  class="galeriaWallpaper" enctype="multipart/form-data" style="position: relative;">			
+						<div   class="mb-3 pics animation all 2">
+						     <input name="posicao" type="number" value="1"  hidden>
+							<img style="min-width: 360px;min-height:240" width="360px" height="240px" class="img-fluid" src="../public/img/uploads/galeria/<?php echo $this->view->galeria[0]['imagem'] ?>" alt="Card image cap">
+							<?php if($this->view->user_id == $_SESSION['id']){ ?>
+								<input   class="inputGaleria" hidden name="galeria" id="galeria1" type="file">
+								<label for="galeria1"></label>
+							<?php } ?>
+						</div>
 					
-			 
-
-
-					<div class="mb-3 pics animation all 2">
-						<img class="img-fluid" src="https://mdbootstrap.com/img/Photos/Horizontal/Nature/4-col/img%20(73).jpg" alt="Card image cap">
-					</div>
+					</form>	
 					<!-- Grid column -->
 
 					<!-- Grid column -->
-					<div class="mb-3 pics animation all 1">
-						<img class="img-fluid" src="https://mdbootstrap.com/img/Photos/Vertical/mountain1.jpg" alt="Card image cap">
-					</div>
+					<form method="post"  class="galeriaWallpaper" enctype="multipart/form-data" style="position: relative;">			
+
+						<div class="mb-3 pics animation all 1 galeriaWallpaper">
+						<input name="posicao" type="number" value="2"  hidden>
+
+						<img   style="min-width: 360px;min-height:539"   height="539px" width="360px"  class="img-fluid" src="../public/img/uploads/galeria/<?php echo $this->view->galeria[1]['imagem'] ?>" alt="Card image cap">
+						<?php if($this->view->user_id == $_SESSION['id']){ ?>
+
+						   <input class="inputGaleria" accept="image/x-png,image/jpge,image/jpg" hidden name="galeria" id="galeria2" type="file">
+
+							<label for="galeria2"></label>
+
+						<?php } ?>
+						</div>
+					</form>
 					<!-- Grid column -->
 
 					<!-- Grid column -->
-					<div class="mb-3 pics animation all 1">
-						<img class="img-fluid" src="https://mdbootstrap.com/img/Photos/Vertical/mountain2.jpg" alt="Card image cap">
-					</div>
+					<form method="post"  class="galeriaWallpaper" enctype="multipart/form-data" style="position: relative;">			
+
+						<div  class="mb-3 pics animation all 1 galeriaWallpaper">
+						<input name="posicao" type="number" value="3"  hidden>
+
+						<img   style="min-width: 360px;min-height:539"   height="539px" width="360px" class="img-fluid" src="../public/img/uploads/galeria/<?php echo $this->view->galeria[2]['imagem'] ?>" alt="Card image cap">
+						<?php if($this->view->user_id == $_SESSION['id']){ ?>
+							<input class="inputGaleria" accept="image/x-png,image/jpge,image/jpg" hidden name="galeria" id="galeria3" type="file">
+
+							<label for="galeria3"></label>
+						<?php }?>
+						</div>
+					</form>
 					<!-- Grid column -->
 
 					<!-- Grid column -->
-					<div class="mb-3 pics animation all 2">
-						<img class="img-fluid" src="https://mdbootstrap.com/img/Photos/Horizontal/Nature/4-col/img%20(35).jpg" alt="Card image cap">
-					</div>
+					<form method="post"  class="galeriaWallpaper" enctype="multipart/form-data" style="position: relative;">			
+
+						<div  class="mb-3 pics animation all 2 galeriaWallpaper">
+						<input name="posicao" type="number" value="4"  hidden>
+
+						<img style="min-width: 360px;min-height:240" width="360px" height="240px" class="img-fluid" src="../public/img/uploads/galeria/<?php echo $this->view->galeria[3]['imagem'] ?>" alt="Card image cap">
+						<?php if($this->view->user_id == $_SESSION['id']){ ?>
+
+							<input class="inputGaleria" accept="image/x-png,image/jpge,image/jpg" hidden name="galeria" id="galeria4" type="file">
+
+								<label for="galeria4"></label>
+						<?php } ?>
+						</div>
+					</form>
 					<!-- Grid column -->
 
 					<!-- Grid column -->
-					<div class="mb-3 pics animation all 2">
-						<img class="img-fluid" src="https://mdbootstrap.com/img/Photos/Horizontal/Nature/4-col/img%20(18).jpg" alt="Card image cap">
-					</div>
+					<form method="post"  class="galeriaWallpaper" enctype="multipart/form-data" style="position: relative;">			
+
+						<div class="mb-3 pics animation all 2 galeriaWallpaper">
+						<input name="posicao" type="number" value="5"  hidden>
+
+						<img style="min-width: 360px;min-height:240" width="360px" height="240px" class="img-fluid" src="../public/img/uploads/galeria/<?php echo $this->view->galeria[4]['imagem'] ?>" alt="Card image cap">
+						<?php if($this->view->user_id == $_SESSION['id']){ ?>
+
+						   <input class="inputGaleria" accept="image/x-png,image/jpge,image/jpg" hidden name="galeria" id="galeria5" type="file">
+
+							<label for="galeria5"></label>
+						<?php } ?>
+						</div>
+					</form>
 					<!-- Grid column -->
 
 					<!-- Grid column -->
-					<div class="mb-3 pics animation all 1">
-						<img class="img-fluid" src="https://mdbootstrap.com/img/Photos/Vertical/mountain3.jpg" alt="Card image cap">
-					</div>
+					<form method="post" class="galeriaWallpaper" enctype="multipart/form-data" style="position: relative;">			
+
+						<div  class="mb-3 pics animation all 1 galeriaWallpaper">
+						<input name="posicao" type="number" value="6"  hidden>
+
+						<img style="min-width: 360px;min-height:539"   height="539px" width="360px" class="img-fluid" src="../public/img/uploads/galeria/<?php echo $this->view->galeria[5]['imagem'] ?>" alt="Card image cap">
+						<?php if($this->view->user_id == $_SESSION['id']){ ?>
+
+						<input class="inputGaleria" accept="image/x-png,image/jpge,image/jpg" hidden name="galeria" id="galeria6" type="file">
+
+							<label for="galeria6"></label>
+						<?php } ?>
+						</div>
+					</form>
 					<!-- Grid column -->
 
 				</div>

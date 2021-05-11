@@ -34,6 +34,11 @@ class AuthController extends Action {
 		setcookie('secure', null, -1);
 
 		session_start();
+		//atualiza o online
+		$usuario = Container::getModel('usuario');
+		$usuario->__set('id', $_SESSION['id']);
+		$usuario->offline();
+	
 		session_destroy();
 		
 		header("location:/miniframework/public/");

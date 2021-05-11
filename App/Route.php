@@ -13,6 +13,11 @@ class Route extends Bootstrap {
 			'controller' => 'IndexController',
 			'action' => 'index'
 		);
+		$routes['getusuario'] = array(
+			'route' => '/getusuario',
+			'controller' => 'ChatController',
+			'action' => 'getusuario'
+		);
 
 		$routes['inscreverse'] = array(
 			'route' => '/inscreverse',
@@ -65,6 +70,11 @@ class Route extends Bootstrap {
 			'route' => '/pesquisarpor',
 			'controller' => 'AppController',
 			'action' => 'pesquisarpor'
+		);
+		$routes['pesquisarporamigos'] = array(
+			'route' => '/pesquisarporamigos',
+			'controller' => 'AppController',
+			'action' => 'pesquisarporamigos'
 		);
 		$routes['pesquisarpormensagem'] = array(
 			'route' => '/pesquisarpormensagem',
@@ -210,6 +220,18 @@ class Route extends Bootstrap {
 			'controller' => 'AppController',
 			'action' => 'getComentarios'
 		);
+		$routes['cadastrarTodosGaleria'] = array(
+			'route' => '/cadastrarTodosGaleria',
+			'controller' => 'PerfilController',
+			'action' => 'cadastrarTodosGaleria'
+		);
+		
+		$routes['alterarImagemGaleria'] = array(
+			'route' => '/alterarImagemGaleria',
+			'controller' => 'PerfilController',
+			'action' => 'alterarImagemGaleria'
+		);
+
 		$routes['getDataString'] = array(
 			'route' => '/getDataString',
 			'controller' => 'AppController',

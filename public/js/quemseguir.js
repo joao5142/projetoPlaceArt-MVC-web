@@ -114,3 +114,61 @@ $(document).ready(()=>{
             
     
 });
+
+
+
+$("#pesquisarPorAmigos").on('keyup',(e) => {
+	 console.log('estamos em pesquisaramigos');
+
+	var dados = $(e.target).closest('form').serialize();
+
+	$("#containerSeusAmigos").html('');
+	 
+	$.ajax({
+		type: 'post',
+		url: '/miniframework/public/pesquisarporamigos',
+		data: dados,
+		dataType: 'json',
+		success: data => {
+			console.log(data);
+
+
+			//coloco os usuarios achados na div
+			 data.forEach(usuario => {
+				 console.log();
+
+				var ele= "";
+
+				  if(usuario.onlineSN=='s'){ 
+						 ele = `<p class="textUserSeguir" ><i style="color: greenyellow;" class="fas fa-circle"></i> Online  a <?=$comentarios->timing(strtotime($user['online'])) ?> </p>`
+					}else{  
+
+						ele=`<p class="textUserSeguir" ><i style="color: #777;" class="fas fa-circle"></i> Offline </p>`;
+
+					} 
+				 
+		
+				var conteudo = `
+				 
+					<div class="row serchContainerMenu mb-4">
+						<div class="searchContainer col">
+							<img style="cursor:pointer;" onclick="location.href='/miniframework/public/perfil?idUsuario=`+usuario.id+`'"  src="../public/img/user/`+usuario.picture+`">
+							`+ ele+`
+						</div>
+
+
+					</div>
+			 
+						`;
+
+				$("#containerSeusAmigos").prepend(conteudo);
+			});
+
+		},
+		error: error => {
+			console.log(error.responseText);
+		}
+
+	});
+});
+

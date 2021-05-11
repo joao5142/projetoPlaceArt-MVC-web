@@ -143,7 +143,58 @@ $(document).ready(() => {
              }
        });
 
+    //mudar imagem da galeria
 
+    $('.galeriaWallpaper input[type="file"]').change((e)=>{
+
+        let input=e.target;
+
+
+        if (input.files && input.files[0]) {
+            var form=$(input).closest('form')[0];
+            var reader = new FileReader();
+
+            reader.onload = function (e) {
+                var file = input.files[0];
+
+                var formData = new FormData(form);
+                 
+                $(input).closest('div').find('img').attr('src',e.target.result);
+
+                let posicao=  $(input).closest('div').find('input[type="number"]').value;
+
+                updateImagemGaleria(formData,posicao); //função para salvar no banco
+
+            }
+            
+
+
+            reader.readAsDataURL(input.files[0]);
+
+        }
+    });
+
+    function  updateImagemGaleria(formData,posicao){
+        $.ajax({
+            type:'post',
+            url:'/miniframework/public/alterarImagemGaleria',
+            data:formData,
+            cache: false,
+            contentType: false,
+            processData: false,
+            success:data=>{
+                 console.log(data);
+            },
+            error:error=>{
+                Swal.fire({
+                    title: 'Opps!',
+                    text: error.statusText,
+                    icon: 'error',
+                    html: error.statusText,
+                });
+            },
+        });
+    }
     //o container de escolha do wallpaper começa fechado
  
 

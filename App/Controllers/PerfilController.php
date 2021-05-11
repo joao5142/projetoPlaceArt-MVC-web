@@ -51,6 +51,9 @@ class PerfilController extends Action
         $usuario->__set('id', $id);
         $user = $usuario->getById();
 
+        $galeria= Container::getModel('galeria');
+        $galeria->__set('usuario',$id);
+        $this->view->galeria=$galeria->getGaleria();
         $this->view->user_name = $user['name'];
         $this->view->user_picture = $user['picture'];
         $this->view->user_id = $user['id'];
@@ -67,6 +70,43 @@ class PerfilController extends Action
 
  
          $this->render('perfil');
+    }
+
+    function alterarImagemGaleria(){
+         echo 'chgamos em alterar imagem galeria';
+
+         print_r($_POST);
+
+         print_r($_FILES);
+
+         session_start();
+         $galeria=Container::getModel('galeria');
+         $galeria->__set("posicao",$_POST['posicao']);
+         $galeria->__set('usuario',$_SESSION['id']);
+
+         if (isset($_FILES) && $_FILES['galeria']['error'] == 0) {;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+            $arquivoname = $_SESSION['username'] . "_" . rand(999, 999999) . $_FILES['galeria']['name'];
+            //onde a imagem ta guardada temporariamente
+            $arquivotmp = $_FILES['galeria']['tmp_name'];
+            //o caminho para a imagem
+            $arquivoPath = "../public/img/uploads/galeria/";
+
+            //verifica se o upload foi feito 
+            if (is_uploaded_file($arquivotmp)) {
+                //move a imagem para o imagePath e verifica se foi movida
+                if (move_uploaded_file($arquivotmp, $arquivoPath . $arquivoname)) {
+                    $galeria->__set('imagem',$arquivoname);
+                }
+            }
+        }
+
+        $sucess=$galeria->alterarImagem();
+
+        echo $sucess;
+    }
+    function cadastrarTodosGaleria(){
+        $galeria= Container::getModel('galeria');
+        $galeria->inserirTodosGaleria();
     }
 
     public function seguir(){

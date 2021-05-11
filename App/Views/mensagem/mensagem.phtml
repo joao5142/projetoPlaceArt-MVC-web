@@ -1,3 +1,5 @@
+
+
 <div id="containerChat" style="position: absolute;z-index:2189127049721481239821380">
   <div id="fecharContainerChat">
   		<i onclick="esconderChat(this)" style="cursor:pointer" class="fas fa-times fa-2x"></i>
@@ -36,9 +38,9 @@
 					</div>
 
 					  
-				 		<p class="name"><?= $this->view->user_username?></p>
-						<p class="row">Online agora mesmo</p>
-						<p class="row">Membro desde  19/07/2020</p>
+				 		<p id="nomeUsuario" class="name"><?= $this->view->user_username?></p>
+						<p id="usuarioOnline" class="row">Online  <?=$this->view->user_online?></p>
+						<p id="usuarioCriacao" class="row">Membro desde <?=  $this->view->user_datacriacao ?></p>
 
 						
 
@@ -52,3 +54,12 @@
 </div>
 
 <script charset="utf-8" src="../public/js/mensagem.js"></script>
+
+<?php if(isset($_GET['idUsuario']) && $_GET['idUsuario'] != ''){ ?>
+   <script>
+	   $(document).ready(()=>{
+		chat(<?=$_GET['idUsuario'] ?>,'',null);
+	   })
+	 
+   </script>
+<?php }?>

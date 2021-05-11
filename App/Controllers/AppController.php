@@ -36,6 +36,11 @@ class AppController extends Action
     public function timeline()
     {
         session_start();
+         //atualiza o online
+        $usuario = Container::getModel('usuario');
+        $usuario->__set('id', $_SESSION['id']);
+        $usuario->updateonline();
+        $user = $usuario->getById();
         //recuperando as postagens e criando uma variavel
         $postagens = Container::getModel('postagem');
 
@@ -67,8 +72,10 @@ class AppController extends Action
 
         //recuperando quemSeguir e criando uma variavel
         $quemSeguir = $usuario->getQuemSeguir();
+        $amigos = $usuario->getAmigos();
 
         $this->view->quemSeguir = $quemSeguir;
+        $this->view->amigos = $amigos;
 
         $this->render('timeline');
     }
@@ -175,6 +182,27 @@ class AppController extends Action
         print_r($usuarios);
     }
 
+    public function pesquisarporamigos()
+    {
+        session_start();
+
+        $usuario = Container::getModel('usuario');
+        $usuario->__set('id', $_SESSION['id']);
+
+        $usuarios=null;
+        if($_POST['pesquisarpor']==''){
+            $usuarios = $usuario->getAmigos();
+
+        }else{
+            $usuarios = $usuario->getAmigosOffset($_POST['pesquisarpor']);
+
+        }
+
+        $usuarios = json_encode($usuarios);
+
+        print_r($usuarios);
+    }
+
     public function deletarpostagem(){
         $postagem = Container::getModel('postagem');
         $postagem->__set('idPostagem',$_POST['idPostagem']);
@@ -187,6 +215,19 @@ class AppController extends Action
         echo json_encode($sucesso);
     }
 
+    function compressImage($source_path, $destination_path, $quality) {
+        $info = getimagesize($source_path);
+    
+        if ($info['mime'] == 'image/jpeg') {
+            $image = imagecreatefromjpeg($source_path);
+        } elseif ($info['mime'] == 'image/png') {
+            $image = imagecreatefrompng($source_path);
+        }
+    
+        imagejpeg($image, $destination_path, $quality);
+    
+        return $destination_path;
+    }
 
     public function criarpostagem()
     {

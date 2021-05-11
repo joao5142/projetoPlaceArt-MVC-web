@@ -177,6 +177,14 @@ use PDO;
           if ($text == "segundo") {
               return "agora mesmo";
           }
+          if($text=="mês"){
+            if($numberOfUnits>1){    
+                 return $numberOfUnits.' '.'meses';
+            }else{
+                return $numberOfUnits.' '.'mês';
+            }
+            
+          }
           return $numberOfUnits.' '.$text.(($numberOfUnits>1)?'s':'');
       }
 

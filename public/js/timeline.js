@@ -1,4 +1,6 @@
-   $(document).ready(() => {
+ 
+       $(document).ready(() => {
+     
         //funcao para subir a rolagem
         $('.denunciarPostagem').hover( function(){$(this).parent().find('p').css({opacity:'1'})}, function(){$(this).parent().find('p').css({opacity:'0'})} );
 
@@ -12,6 +14,20 @@
             }
         });
 
+        $(window).scroll(function() {
+            console.log($(window).scrollTop());
+            console.log($('body').height());
+            if ($(window).scrollTop() < $('body').height()) {
+                $("#seusAmigos").css("display", "none");
+                $("#seusAmigos").css("z-index", "-10");
+            } else {
+                $("#seusAmigos").css("display", "block");
+                $("#seusAmigos").css("z-index", "10");
+
+            }
+        });
+
+ 
         $("#back-to-top").click(function() {
             $("html, body").animate({scrollTop: 0}, 800);
         });
@@ -988,7 +1004,7 @@ console.log('id da postagem : '+postagem.postagemId+', totComentarios: '+totCome
 
                     <div id="curtirResponderComentario">
                         <span onclick="curtirComentarioC()">Curtir </span>
-                        <span id="comentarComentario" onclick="mostrarResponder(`+comentario.idComentario+`)">Responder </span>
+                        <span style="cursor:pointer" class="block" id="comentarComentario" onclick="mostrarResponder(`+comentario.idComentario+`)">Responder </span>
                         <span style="font-size: 13px;">`+dataStr+`</span>
 
                     </div>
@@ -1180,7 +1196,7 @@ console.log('id da postagem : '+postagem.postagemId+', totComentarios: '+totCome
 
                    <div id="curtirResponderComentario" style="position:relative">
                        <span style="`+estiloCor+`" onclick="curtirComentario('curtirComentario`+comentario.idComentario+`','`+comentario.idComentario+`','`+usuarioCurtiuComentario+`')"   id="curtirComentario`+comentario.idComentario+`">Curtir </span>
-                       <span id="comentarComentario" onclick="mostrarResponder(`+comentario.idComentario+`)">Responder </span>
+                       <span style="cursor:pointer" class="block" id="comentarComentario" onclick="mostrarResponder(`+comentario.idComentario+`)">Responder </span>
                        <span style="font-size: 13px;" id="comentarComentario">`+dataStr+`</span>
 
                        <span style="position:absolute; top:0px ;right:0px" class=""><span>`+totComentarComentarios+` </span><i class="far fa-comment-alt"></i></span>
@@ -1238,9 +1254,22 @@ console.log('id da postagem : '+postagem.postagemId+', totComentarios: '+totCome
       
    }
    function mostrarResponder(ele){
-       $("#containerSeuComentario"+ele).css({
-           display:'block',
-       })
+    if($("#containerSeuComentario"+ele).hasClass('none')){
+        $("#containerSeuComentario"+ele).css({
+            display:'block',
+        });
+        $("#containerSeuComentario"+ele).removeClass('none');
+        $("#containerSeuComentario"+ele).addClass('block');
+    }else{
+        $("#containerSeuComentario"+ele).removeClass('block');
+        $("#containerSeuComentario"+ele).addClass('none');
+
+        $("#containerSeuComentario"+ele).css({
+            display:'none',
+        });
+
+    }
+      
    }
  
    //função para mostrar o container ou esconder

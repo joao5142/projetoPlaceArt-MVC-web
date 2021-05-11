@@ -9,6 +9,7 @@ Utils::verificarLogado();
 
 <!-- navegacao menu -->
 <nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <a class="nav-link" href="/miniframework/public/timeline"><img width="80px" class="img-fluid" src="../public/img/logo/logo_2.png"> </a>
 
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarTogglerDemo02" aria-controls="navbarTogglerDemo02" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
@@ -113,7 +114,7 @@ Utils::verificarLogado();
                                     <form id="denunciarConteudoPostagem" method="post" action="/miframework/public/salvardenuncia">
                                         <input value="<?= $_GET['idPostagem'] ?>" name="idPostagem" type="number" hidden>
                                         <textarea name="mensagem" class="textAreaDenunciar"></textarea>
-                                        <button style="margin: 10px;" class="btn btn-outline-info" type="submit">Ok</button>
+                                        <br/><button style="margin: 10px;" class="btn btn-outline-info" type="submit">Ok</button>
                                     </form>
                                 </div>
                             </div>

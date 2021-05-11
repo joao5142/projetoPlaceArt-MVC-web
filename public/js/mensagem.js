@@ -68,7 +68,7 @@ $(document).ready(()=>{
              }
     });
 
-    set
+   
 
 });
 
@@ -121,7 +121,7 @@ function getConversas(){
 function addUsuariosToContainer(arrayusuario){
     arrayusuario.forEach(function(usuario, chave){
             var user = `
-            <div class="chat" onclick="chat(`+usuario.id+`,'`+usuario.username+`')">
+            <div class="chat" onclick="chat(`+usuario.id+`,'`+usuario.username+`','`+usuario+`')">
                 <img src="../public/img/user/`+usuario.picture+`">
                 <p style="color">`+usuario.username+`</p>
             </div>
@@ -382,11 +382,59 @@ function addToContainerPesquisa(arrayusuario){
 }
 
 
-function chat(id,username){
+function chat(id,username,usuario){
+
+    let user=null;
+    $.ajax({
+        type: 'post',
+        url: '/miniframework/public/getusuario',
+        data:'id='+id,
+        dataType:'json',
+        async:false,
+        success: data => {
+              console.log(data);
+             
+        },
+        error: error => {
+           // console.log(error);
+        }
+
+    }).done(data=>{
+        user=data;
+    });
+
+    var dataStr= '';
+   
+   //transforma a date em anos dias mes
+   $.ajax({
+
+            url:'/miniframework/public/getDataString',
+            type:'post',
+            data:"data="+user.online,
+            async:false,
+        
+            success:data=>{
+                console.log(data);
+                 dataStr=data;
+
+                
+            },
+            error:error=>{
+            
+            }
+    }).done(data=>{
+        dataStr=data;
+    });
+
+    $("#userImg").attr('src','../public/img/user/'+user.picture);
+    $("#nomeUsuario").html(user.name);
+    $("#usuarioOnline").html(`Online ${dataStr}`);
+    $("#usuarioCriacao").html(`Membro desde ${user.creation}`);
+
      $("#containerChat #chat").html(`
     <div class="topMenu">
         <img style="cursor:pointer;" src="../public/img/outros/close.png" onclick="fecharChat()">
-        <p class="title">`+username+`</p>
+        <p class="title">`+user.username+`</p>
     </div> 
 
     <div class="innerContainer"></div>
@@ -409,6 +457,71 @@ function chat(id,username){
 
 
  function fecharChat(){
+    var valor=0;
+    $.ajax({
+        type: 'post',
+        url: '/miniframework/public/getUsuarioId',
+       dataType:'json',
+        async:false,
+        success: data => {
+             console.log(data);
+             
+        },
+        error: error => {
+            console.log(error);
+        }
+
+    }).done(data=>{
+       valor=data;
+    });
+
+    let user=null;
+    $.ajax({
+        type: 'post',
+        url: '/miniframework/public/getusuario',
+        data:'id='+valor,
+        dataType:'json',
+        async:false,
+        success: data => {
+              console.log(data);
+             
+        },
+        error: error => {
+           // console.log(error);
+        }
+
+    }).done(data=>{
+        user=data;
+    });
+
+    var dataStr= '';
+   
+   //transforma a date em anos dias mes
+   $.ajax({
+
+            url:'/miniframework/public/getDataString',
+            type:'post',
+            data:"data="+user.online,
+            async:false,
+        
+            success:data=>{
+                console.log(data);
+                 dataStr=data;
+
+                
+            },
+            error:error=>{
+            
+            }
+    }).done(data=>{
+        dataStr=data;
+    });
+
+    $("#userImg").attr('src','../public/img/user/'+user.picture);
+    $("#nomeUsuario").html(user.name);
+    $("#usuarioOnline").html(`Online ${dataStr}`);
+    $("#usuarioCriacao").html(`Membro desde ${user.creation}`);
+
      console.log('entramos em fechar chat');
 
      $("#containerChat #chat").html(`

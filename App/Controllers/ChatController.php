@@ -26,6 +26,11 @@ class ChatController extends Action
         session_start();
         echo json_encode($_SESSION['id']);
     }
+    function getusuario(){
+        $usuario = Container::getModel('usuario');
+        $usuario->__set('id',$_POST['id']);
+        echo json_encode($usuario->getById());
+    }
    function getUltimaMessageChat(){
         $chat =Container::getModel('chat');
         $chat->__set('reciever',$_POST['otherUser']);

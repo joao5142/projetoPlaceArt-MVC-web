@@ -11,20 +11,23 @@ use MF\Model\Container;
 require_once('../../miniframework/App/Utils.php');
 Utils::verificarLogado();
 
-
+date_default_timezone_set('America/Sao_Paulo');
+$comentarios=Container::getModel('comentario');
+$comentariosDosComentarios=Container::getModel('ComentarComentarios');
 ?>
 
 <!-- navegacao menu -->
 <nav class="navbar navbar-expand-lg navbar-light bg-light">
-	<a class="navbar-brand" href="#">
-		ArtP 
-	</a>
+ 
+	<a class="nav-link" href="#"><img width="80px" class="img-fluid" src="../public/img/logo/logo_2.png"> </a>
+ 
 	<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarTogglerDemo02" aria-controls="navbarTogglerDemo02" aria-expanded="false" aria-label="Toggle navigation">
 		<span class="navbar-toggler-icon"></span>
 	</button>
 
 	<div class="collapse navbar-collapse" id="navbarTogglerDemo02">
 		<ul class="navbar-nav mr-auto mt-2 mt-lg-0">
+			
 			<li class="nav-item ">
 				<a class="nav-link" href="#">Home </a>
 			</li>
@@ -43,8 +46,8 @@ Utils::verificarLogado();
 			</li>
 		</ul>
 
-		 <div class="d-none d-md-block" style="cursor:pointer;margin-right:15px;margin-left:15px">
-		 	<a style="text-decoration: none;" target="_blank" href="/miniframework/public/mensagem"><i    class="fas fa-comment-dots fa-2x d-none d-md-block"></i></a>
+		 <div class="d-none d-md-block" style="z-index:200000000000000000000000000;position: fixed; bottom: 15px; right:15px;cursor:pointer">
+		 	<a style="text-decoration: none;color:black" target="_blank" href="/miniframework/public/mensagem"><i    class="fas fa-comments fa-2x d-none d-md-block"></i></a>
 
 		</div>
 
@@ -67,9 +70,9 @@ Utils::verificarLogado();
 <div class="container mt-5">
 	<div class="row pt-2">
 		<!-- topo imagem,seguidores,postagens ,seguindo -->
-		<div class="col-md-3" id="menuUsuarioContainer">
+		<div style="position:relative;left:-100px" class="col-md-3" id="menuUsuarioContainer">
 
-			<div id="profile">
+			<div id="profile" style="z-index: 11;">
 				<div class="perfilTopo">
 					<form method="post" enctype="multipart/form-data" id="uploadPic">
 						<input type="file" name="imgInp" accept="image/x-png,image/jpge,image/jpg" id="imgInp" hidden>
@@ -110,6 +113,38 @@ Utils::verificarLogado();
 				</div>
 			</div>
 
+			<div  id="seusAmigos" class="col-md-3 d-none d-lg-block" style="position:fixed; left:0px; top:20%;display:none;z-index:-10">
+			<div class="quemSeguir">
+				<span class="quemSeguirTitulo">Seus amigos <i class="fas fa-globe-asia"></i></span><br />
+				<hr />
+				<div class="row" >
+					<div class="col" style="height:300px;overflow:auto" id="containerSeusAmigos">
+						<?php foreach ($this->view->amigos as $key => $user) {  ?>
+							<div class="row serchContainerMenu mb-4">
+								<div class="searchContainer col">
+									<img style="cursor:pointer;" onclick="location.href='/miniframework/public/perfil?idUsuario=<?=$user['id']?>'"  src="../public/img/user/<?=$user['picture']?>">
+									 <?php if($user['onlineSN']=='s'){?>
+											<p class="textUserSeguir" ><i style="color: greenyellow;" class="fas fa-circle"></i> Online  a <?=$comentarios->timing(strtotime($user['online'])) ?> </p>
+									 <?php }else{ ?>
+
+											<p class="textUserSeguir" ><i style="color: #777;" class="fas fa-circle"></i> Offline </p>
+
+									 <?php }?>
+								</div>
+
+
+							</div>
+						<?php } ?>
+					</div>
+
+				</div>
+			 </div>
+			 <form style="width: 100%;" id="pesquisarUsuarios" class="form-inline my-2 my-lg-0" method="post" action="/pesquisarAmigos">
+					<input style="width: 100%;" id="pesquisarPorAmigos" class="form-control mr-sm-2" type="search" placeholder="Procurar Amigos" name="pesquisarpor">
+		   
+			</form>
+		</div>
+
 		</div>
 		<!-- fim -->
 
@@ -123,10 +158,10 @@ Utils::verificarLogado();
 					<form id="formularioPostagem" method="post" enctype="multipart/form-data" action="miniframwork/postagem">
 					
 						<textarea id="textTweet" name="postagemTextArea" class="form-control" id="exampleFormControlTextarea1" rows="3"></textarea>
-						<div  style="margin-top:15px;display: inline-block; border-radius:20px;background-color:#1DA1F2;border:none;color:white;padding:1px;padding-left:4px;padding-right:4px">
+						<div   style="color:white;background-color:#17A2B8;margin-top:15px;display: inline-block; border-radius:20px;color:black;padding:1px;padding-left:4px;padding-right:4px">
 								 
-						        <input onclick="verChecado(this)" style="line-height:50%;border:none" name="postVendas" type="checkbox" id="postVendas">
-								<label style="line-height:50%" for="postVendas">Postagem Venda</label>
+						        <input onclick="verChecado(this)" style="line-height:50%;border:none;" name="postVendas" type="checkbox" id="postVendas">
+								<label  style="line-height:50%;color:white" for="postVendas">Postagem Venda</label>
 						</div>
 						<!-- //container da imagem q vai ser carregada -->
 
@@ -150,7 +185,7 @@ Utils::verificarLogado();
 
 
 							<div class="">
-								<button id="buttonTweet" type="submit" class="btn btn-primary justify-content-end">Criar Postagem</button>
+								<button id="buttonTweet" type="submit" class="btn btn-outline-info justify-content-end">Criar Postagem</button>
 
 							</div>
 						</div>
@@ -237,7 +272,7 @@ Utils::verificarLogado();
 					</div>
 
 				</div>
-				<a href="/miniframework/public/quemseguir" class="quemSeguirTxt">Procurar por pessoas conhecidas</a>
+				<a style="color:black" href="/miniframework/public/quemseguir" class="quemSeguirTxt">Procurar por pessoas conhecidas</a>
 			</div>
 		</div>
 		<!-- fim quem seguir -->
